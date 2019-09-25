@@ -45,6 +45,10 @@ function init()
   createPartitions(counterArr, counterArrSum);
 }
 
+/*
+
+<input type="file" />
+
 // THIS IS A SHITTY CSV PARSER
 function loadData()
 {
@@ -95,7 +99,7 @@ function filefromWeb(){
   ctx.fillText(rm, ampX + 10, ampY + 5);
   ctx.stroke();
 }
-
+*/
 
 // GAIN NUMBER OF CATEGORIES AND NUMBER CONTAINED
 function getCategories()

@@ -37,6 +37,10 @@ var barChartplot = [
 
 var barChartObjects = [];
 var barChartIterateVars = [0, 0];
+var barChartQuickSort = [];
+var barChartQuickSortIndex = -1;
+
+
 var quickSortLBUB = [];
 var LBUBcounter1 = 0;
 var LBUBCounter2 = 0;
@@ -192,6 +196,7 @@ function bubbleSort(data)
 	}
 }
 
+/*
 //Quicksort algorithm
 function traditionalQuickSort(lb, ub, data)
 {
@@ -248,6 +253,76 @@ function traditionalQuickSortCallBack(pivot, data)
 	traditionalQuickSort(quickSortLBUB[LBUBcounter1][0], pivot, data);
 	console.log("called the second recursive function with values: " + pivot+1 + " " + origub);
 	traditionalQuickSort(pivot+1, origub, data);
+}
+*/
+
+function traditionalQuickSortExecutor(data)
+{
+	algoNo = 2;
+
+	traditionalQuickSort(0, data.length-1, data);
+	traditionalQuickSortSwap(barChartQuickSort);
+}
+
+function traditionalQuickSort(lb, ub, data)
+{
+	if (lb < ub)
+	{
+
+		var p = traditionalPivot(lb, ub, data);
+    
+    	traditionalQuickSort(lb, p, data);
+    	traditionalQuickSort(p+1, ub, data);
+	}
+}
+
+function traditionalPivot(lb, ub, data)
+{
+	var i = Math.floor(lb + ((ub - lb) / 2));
+	console.log(i);
+    var p = data[i][0];
+        
+        while (1)
+        {
+            while (data[ub][0] > p)
+            {
+                ub -= 1;
+            }
+            
+            while (data[lb][0] < p)
+            {
+                lb += 1;
+            }
+            
+            //This breaks the loop; once the lb goes beyond the ub
+            if (lb >= ub) {return ub;}
+
+            barChartQuickSort.push([lb, ub, data[lb][0], data[ub][0]]);
+            var temp = data[lb];
+            data[lb] = data[ub];
+            data[ub] = temp;
+            
+            ub -= 1;
+            lb += 1;
+        }
+}
+
+function traditionalQuickSortSwap(order)
+{
+
+	barChartQuickSortIndex += 1;
+	bounceFinished = false;
+
+	//swap
+	if (barChartQuickSortIndex < order.length) 
+	{ 
+		console.log(order[barChartQuickSortIndex][0] + ", " + order[barChartQuickSortIndex][1]);
+		constructSwap(order[barChartQuickSortIndex][0], order[barChartQuickSortIndex][1]); 
+	}
+	else
+	{
+		barChartQuickSortIndex = -1;
+	}
 }
 
 function constructBarChart(constructData)
@@ -306,6 +381,7 @@ function constructSwap(v1, v2)
 {	
 	//Debug
 	console.log("called constructSwap");
+	console.log("values: " + barChartObjects[val1].value + " " + barChartObjects[val2].value);
 
 	//Init the variables
 	val1 = v1;
@@ -451,7 +527,7 @@ function animationFinished()
 
 	//Callback to correct algorithm
 	if (algoNo == 1) {bubbleSort(barChartObjects);}
-	if (algoNo == 2) {traditionalQuickSortPartition(val1+1, val2-1, barChartObjects);}
+	if (algoNo == 2) {traditionalQuickSortSwap(barChartQuickSort);}
 }
 
 
