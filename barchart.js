@@ -37,7 +37,9 @@ var barChartplot = [
 
 var barChartObjects = [];
 var barChartIterateVars = [0, 0];
-
+var quickSortLBUB = [];
+var LBUBcounter1 = 0;
+var LBUBCounter2 = 0;
 
 //Canvas object
 let canvas2 = document.getElementById("canvas2");
@@ -51,6 +53,11 @@ canvas2.style.left = "0%";
 canvas2.style.top = "0%";
 canvas2.style.position = "absolute";
 
+//Determine which algorithm is running
+var algoNo = 0;
+var p = 0;
+var pInd = 0;
+
 //Animation global variables
 var val1 = 0;
 var val2 = 0;
@@ -63,6 +70,7 @@ var middX = 0;
 
 var tempv1C = "";
 var tempv2C = "";
+var tempPivotC = "";
 
 //Translation for bounce
 var barChartTranslateRatio = 25;
@@ -135,14 +143,14 @@ function init()
 {
 	constructBarChart(barChartplot);
 	createBars(barChartplot);
-
-	//bubbleSort(barChartObjects);
-
-
 }
 
+//Bubble sort algorithm
 function bubbleSort(data)
 {
+	//Init
+	algoNo = 1;
+
 	var max = data.length-1;
 	bounceFinished = false;
 
@@ -174,6 +182,8 @@ function bubbleSort(data)
 		barChartIterateVars[0] = 0;
 		barChartIterateVars[1] = 0;
 
+		algoNo = 0;
+
 		return;
 	}
 	else
@@ -182,25 +192,63 @@ function bubbleSort(data)
 	}
 }
 
-
-function traditionalQuickSort(data)
+//Quicksort algorithm
+function traditionalQuickSort(lb, ub, data)
 {
+	//Debug
+	console.log("called quicksort");
+	//Init
+	algoNo = 2;
 
-	//Now you have objects for every bar.
-	//This enables you to write a swap function that only makes use of these objects.
-	//You can set a custom color for two of the bars and draw them in red.
+	if (lb < ub)
+	{
+		//First pick the pivot
+		pInd = lb + ((ub - lb) / 2);
+		pInd = Math.floor(pInd);
+		console.log("index: " + pInd);
+		p = data[pInd].value;
 
-	//Then you can animate a change in their x and y position to match the x and y position of the one that needs to be swapped.
-	//Finally you can, administratively, change the location of the objects in the array.
-	//You can also adjust the 
+		//Store original lb value
+		origlb = lb;
+		origub = ub;
+		quickSortLBUB.push([lb, ub]);
 
-
-	return data;
+		traditionalQuickSortPartition(lb, ub, data);
+	}
 }
 
+function traditionalQuickSortPartition(lb, ub, data)
+{
+	//Animation reset
+	bounceFinished = false;
 
+	//Then search for values to swap
+	while (data[ub].value > p) {ub -= 1;}
+    while (data[lb].value < p) {lb += 1;}
+  
 
+    if (lb >= ub) 
+    {
+    	traditionalQuickSortCallBack(ub, data);
+    	return;
+    }
 
+    //Swap
+    console.log("called for a swap");
+    console.log("values: " + lb + " " + ub + " " + p);
+    constructSwap(lb, ub);    
+}
+
+function traditionalQuickSortCallBack(pivot, data)
+{
+	console.log("called to branch out the binary tree");
+
+	LBUBcounter1 += 1;
+	console.log("values: " + quickSortLBUB[LBUBcounter1][0] + " " + quickSortLBUB[LBUBcounter1][1] + " " + p);
+	traditionalQuickSort(quickSortLBUB[LBUBcounter1][0], pivot, data);
+	console.log("called the second recursive function with values: " + pivot+1 + " " + origub);
+	traditionalQuickSort(pivot+1, origub, data);
+}
 
 function constructBarChart(constructData)
 {
@@ -217,11 +265,11 @@ function constructBarChart(constructData)
 	for (var i = 0; i < constructData.length; i += 1)
 	{
 		//Calculate height of the bar
-		var heightOfBar = (canvas2.height - 50) / maxOfArray();
+		var heightOfBar = (canvas2.height - 70) / maxOfArray();
 		heightOfBar = (-heightOfBar * constructData[i][0]);
 
 		//Add the starting point for the width and height
-		var heightofBarStartingPoint = canvas2.height - 30;
+		var heightofBarStartingPoint = canvas2.height - 50;
 		var widthofBarStartingPoint = (widthOfBar * i) + (widthOfBar * 0.6 * i) + 30;
 
 		//Assign to barChartElement and create object
@@ -229,7 +277,7 @@ function constructBarChart(constructData)
 
 		//Calculating the XY for the labels
 		var labelX = widthofBarStartingPoint + halfWidthOfBar;
-		var labelY = canvas2.height - 17;
+		var labelY = canvas2.height - 30;
 
 		//Create object and push
 		var barObject = new barChartObject(constructData[i][0], constructData[i][1], widthofBarStartingPoint, heightofBarStartingPoint, widthOfBar, heightOfBar, colorPicker(), labelX, labelY);
@@ -251,7 +299,7 @@ function createBars(sourceArray)
 	for (var i = 0; i < sourceArray.length; i += 1)
 	{
 		barChartObjects[i].draw();
-	}
+	}	
 }
 
 function constructSwap(v1, v2)
@@ -330,11 +378,11 @@ function animateLoader(bounceFinished)
 function animateBarChartSwap(timestamp)
 {
 	//Move variables at (dX / 30) speed
-	barChartObjects[start].x += (dX / 30);
-	barChartObjects[end].x -= (dX / 30);
+	barChartObjects[start].x += (dX / (12 + 3 * (Math.abs(val1 - val2))));
+	barChartObjects[end].x -= (dX / (12 + 3 * (Math.abs(val1 - val2))));
 
-	barChartObjects[start].lX += (dX / 30);
-	barChartObjects[end].lX -= (dX / 30);
+	barChartObjects[start].lX += (dX / (12 + 3 * (Math.abs(val1 - val2))));
+	barChartObjects[end].lX -= (dX / (12 + 3 * (Math.abs(val1 - val2))));
 
 	//Translate
 	translatedv1X = (barChartObjects[start].x / barChartTranslateRatio) - translatedmiddX;
@@ -351,14 +399,14 @@ function animateBarChartSwap(timestamp)
 	//Clear the canvas and render the board
 	createBars(barChartObjects);
 
-	//Make sure the movements are shown on top of the rendered bars
+	//Color
 	barChartObjects[val1].draw();
 	barChartObjects[val2].draw();
 
 	//Increment the counter
 	dXCounter += 1;
 
-	if (dXCounter < 30) 
+	if (dXCounter < (12 + 3 * (Math.abs(val1 - val2))))
 	{ 
 		window.requestAnimationFrame(animateBarChartSwap); 
 	}
@@ -401,7 +449,9 @@ function animationFinished()
 	barChartObjects[val1] = barChartObjects[val2];
 	barChartObjects[val2] = objTemp;
 
-	bubbleSort(barChartObjects);
+	//Callback to correct algorithm
+	if (algoNo == 1) {bubbleSort(barChartObjects);}
+	if (algoNo == 2) {traditionalQuickSortPartition(val1+1, val2-1, barChartObjects);}
 }
 
 
