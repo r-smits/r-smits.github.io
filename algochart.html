@@ -3,13 +3,12 @@
 
 <html>
   
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css"/>
+
   <title>AlgoChart - Visualisation essentials</title>
 
   <canvas id="canvas1"></canvas>
   <canvas id="canvas2"></canvas>
-
-  
 
   <script type="text/javascript", src="piechart.js"></script>
   <script type="text/javascript", src="barchart.js"></script>
@@ -22,8 +21,18 @@
   <body>
 
     <ul class="menu-ctn">
-      <li class="bubble-sort" onclick="bubbleSort(barChartObjects)">Bubble sort</li>
-      <li class="traditional-quicksort" onclick="traditionalQuickSortExecutor(barChartplot)">Quicksort</li>
+      <li class="scramble" onclick="scramble(barChartplot)">Scramble</li>
+      <li class="reset" onclick="resetBarChartplot()">Reset</li>
+    </ul>
+
+    <ul class="menu2-ctn">
+      <li class="bubble-sort" onclick="bubbleSort(barChartObjects)">Bubblesort</li>
+      <li class="traditional-quicksort" onclick="traditionalQuickSortExecutor(barChartResetplot)">Quicksort</li>
+    </ul>
+
+    <ul class="menu3-ctn">
+      <li class="print" onclick="printArr(barChartplot)">Print</li>
+      <li class="print2" onclick="printArr(barChartResetplot)">Print2</li>
     </ul>
 
   </body>

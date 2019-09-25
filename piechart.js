@@ -22,12 +22,12 @@ let ctx = canvas.getContext('2d');
 
 // Sizing variables
 canvas.width = window.innerWidth / 2 - 50;
-canvas.height = window.innerHeight / 2 - 50;
+canvas.height = window.innerHeight / 2 - 80;
 
 var halfWidth = window.innerWidth / 2;
 
 canvas.style.left = "50%";
-canvas.style.top = "50%";
+canvas.style.top = "425px";
 canvas.style.position = "absolute";
 
 if (canvas.width < canvas.height)
@@ -40,7 +40,7 @@ let mpcY = canvas.height / 2;
 
 function init()
 {
-  loadData();
+  //loadData();
   getCategories();
   createPartitions(counterArr, counterArrSum);
 }
@@ -48,6 +48,8 @@ function init()
 /*
 
 <input type="file" />
+
+
 
 // THIS IS A SHITTY CSV PARSER
 function loadData()
@@ -77,6 +79,7 @@ function loadData()
   }, false);
 }
 
+/*
 function filefromWeb(){
 
   var xhttp = new XMLHttpRequest();
