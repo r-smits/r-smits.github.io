@@ -197,11 +197,6 @@ function resetBarChartplot()
 	barChartQuickSort = [];
 	orderIndex = -1;
 
-	//Draw the new data on the canvas
-	constructBarChart(barChartplot);
-	createBars(barChartplot);
-
-
 	//Reset plots
 	barChartplot = [];
 	
@@ -209,6 +204,10 @@ function resetBarChartplot()
 	{
 		barChartplot.push(resetPlot[i]);
 	}
+
+	//Draw the new data on the canvas
+	constructBarChart(barChartplot);
+	createBars(barChartplot);
 }
 
 
