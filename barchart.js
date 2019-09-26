@@ -74,6 +74,11 @@ var barChartIterateVars = [0, 0];
 var barChartQuickSort = [];
 var orderIndex = -1;
 
+//Piechart data collection points
+var barChartplotSumArray = [];
+var barChartplotSwapCounter = 0;
+var barChartplotSum = 0;
+
 
 var quickSortLBUB = [];
 var LBUBcounter1 = 0;
@@ -169,8 +174,7 @@ class barChartObject
 
 		//Label
 		drawc2.fillStyle = "#000000" // black
-	 	drawc2.fillRect(this.lX, this.lY, 5, 5);
-	  	drawc2.fillText(this.name, this.lX + 10, this.lY + 5);
+	  	drawc2.fillText(this.name, this.lX, this.lY);
 
 		//Stop drawing
 		drawc2.closePath();
@@ -217,6 +221,7 @@ function scramble()
 	barChartplot = [];
 	barChartObjects = [];
 	barChartQuickSort = [];
+	barChartplotSumArray = [];
 	orderIndex = -1;
 
 	//Iterate and give random numbers
@@ -259,6 +264,7 @@ function bubbleSort(data)
 
 		if (data[barChartIterateVars[0]].value > data[barChartIterateVars[1]].value) 
 		{
+			barChartplotSwapCounter += 1;
 			constructSwap(barChartIterateVars[0], barChartIterateVars[1]);
 			return;
 		}
@@ -277,7 +283,12 @@ function bubbleSort(data)
 		//Debug message
 		console.log("bubbleSort finished");
 
+		//Add piechart data
+		barChartplotSumArray.push([barChartplotSwapCounter, "Bubblesort"]);
+		createPartitions(barChartplotSumArray, sumOfArray(barChartplotSumArray));
+
 		//Reset values
+		barChartplotSwapCounter = 0;
 		barChartIterateVars = [0, 0];
 
 		return;
@@ -304,7 +315,6 @@ function traditionalQuickSort(lb, ub, data)
 {
 	if (lb < ub)
 	{
-
 		var p = traditionalPivot(lb, ub, data);
     
     	traditionalQuickSort(lb, p, data);
@@ -332,7 +342,6 @@ function traditionalPivot(lb, ub, data)
             lb += 1;
         }
             
-        //This breaks the loop; once the lb goes beyond the ub
         if (lb >= ub) {return ub;}
 
         barChartQuickSort.push([lb, ub, data[lb][0], data[ub][0]]);
@@ -358,6 +367,11 @@ function orderedSwap(order)
 	}
 	else
 	{
+		//Add piechart data
+		barChartplotSumArray.push([barChartQuickSort.length, "Quicksort"]);
+		createPartitions(barChartplotSumArray, sumOfArray(barChartplotSumArray));
+
+		//Reset values
 		orderIndex = -1;
 	}
 }
@@ -366,7 +380,7 @@ function orderedSwap(order)
 function constructBarChart(constructData)
 {
 	//Reset the sum of values
-	var barChartplotSum = 0;
+	barChartplotSum = 0;
 
 	//Calculate width of the bar
 	var widthOfBar = (canvas2.width / constructData.length);
@@ -399,8 +413,6 @@ function constructBarChart(constructData)
 		//Getting the sum for the partition call
 		barChartplotSum += constructData[i][0];
 	}
-
-	createPartitions(constructData, barChartplotSum);
 }
 
 function createBars(sourceArray)
@@ -579,6 +591,18 @@ function maxOfArray()
 	}
 
 	return max;
+}
+
+function sumOfArray(arr)
+{
+	var sum = 0;
+
+	for (var i = 0; i < arr.length; i += 1)
+	{
+		sum += arr[i][0];
+	}
+
+	return sum;
 }
 
 window.onload = init();

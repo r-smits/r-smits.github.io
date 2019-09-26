@@ -1,12 +1,7 @@
 // Some test data
 var plotData = [
-  ["row1", "IntroducedInHouse", "link"],
-  ["row2", "PassedInSenate1", "link"],
-  ["row3", "BecamePublicLaw", "link"],
-  ["row4", "BecamePublicLaw", "link"],
-  ["row5", "IntroducedInHouse", "link"],
-  ["row4", "BecamePublicLaw", "link"]
-];
+                  ["row1", "Insufficient data", "link"]
+                ];
 
 // Variables called by multiple functions and I'm to lazy to properly implement
 var dataContainer = [];
@@ -170,12 +165,19 @@ function createPartitions(partitionData, partitionSum)
   mpcX2 = mpcX + radius;
   mpcY2 = mpcY;
 
+
   for (var i = 0; i < partitionData.length; i = i + 1)
   {
     // Angle Calculations
     startAngle = endAngle;
     halfAngle = endAngle + (Math.PI * 2) * (0.5 * partitionData[i][0] / partitionSum);
     endAngle = endAngle + (Math.PI * 2) * (partitionData[i][0] / partitionSum);
+
+    console.log("vals: " + partitionData[i][0]);
+    console.log("vals: " + partitionData[i][0] / partitionSum);
+
+    console.log("vals: " + startAngle + " " + halfAngle + " " + endAngle);
+    console.log("vals: " + startAngle + " " + halfAngle + " " + endAngle);
 
     // Draw line segment 1 (start)
     ctx.beginPath();
