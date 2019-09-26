@@ -156,6 +156,9 @@ class barChartObject
 		//Begin drawing
 		drawc2.beginPath();
 
+		//Set width
+		drawc2.lineWidth = 2;
+
 		//Draw the rectangle
 		drawc2.rect(this.x, this.y, this.width, this.height);
 		drawc2.stroke();
@@ -198,8 +201,14 @@ function resetBarChartplot()
 	constructBarChart(barChartplot);
 	createBars(barChartplot);
 
+
 	//Reset plots
-	barChartplot = resetPlot;
+	barChartplot = [];
+	
+	for (var i = 0; i < resetPlot.length; i += 1)
+	{
+		barChartplot.push(resetPlot[i]);
+	}
 }
 
 
@@ -220,8 +229,16 @@ function scramble()
 	}
 
 	//Put random values
-	resetPlot = barChartplot;
+	resetPlot = [];
 
+	console.log("length: " + barChartplot.length);
+	
+	for (var j = 0; j < barChartplot.length; j += 1)
+	{
+		console.log("index: " + barChartplot[j]);
+		resetPlot.push(barChartplot[j]);
+	}
+	
 	//Render the changes
 	constructBarChart(barChartplot);
 	createBars(barChartplot);

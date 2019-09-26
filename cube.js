@@ -3,11 +3,14 @@ let c1 = document.getElementById("canvas1");
 let drawc1 = c1.getContext('2d');
 
 //Size and width of the canvas
-c1.width = window.innerWidth - 50;
-c1.height = 150;
+c1.width = 200;
+c1.height = 90;
 
 c1.style.left = "0%";
 c1.style.top = "0%";
+
+//Append to the right div
+let div = document.getElementById("wrapperchild");
 
 var cube1;
 var cube2;
@@ -58,8 +61,8 @@ class cube
     //Stroke
     drawc1.stroke();
 
-    drawc1.fillStyle = this.color   // Greenish
-    drawc1.fill();
+    //drawc1.fillStyle = this.color   // Greenish
+    //drawc1.fill();
 
     drawc1.closePath();
   }
@@ -91,12 +94,22 @@ class cube
       this.points[i][1] = ry;
     }
   }
+
+  setmidpoint(x, y)
+  {
+    this.midpoint = [x, y];
+  }
+
 }
 
 function init()
 {
-  cube1 = new cube(40   , "#FFFFFF");
-  cube2 = new cube(100  , "#1ABC9C");
+  square1 = new cube(40   , "#FFFFFF");
+  square2 = new cube(40   , "#1ABC9C");
+
+  square1.setmidpoint(c1.width / 2, c1.height / 2 + (0.35 * square1.width));
+  square2.setmidpoint(c1.width / 2, c1.height / 2 - (0.35 * square2.width));
+
 
   window.requestAnimationFrame(animateCube);
 }
@@ -104,14 +117,36 @@ function init()
 function animateCube(timestamp)
 {
 
-  cube1.rotate(-5);
-  cube2.rotate(1);
+  square1.rotate(1.5);
+  square2.rotate(1.5);
 
-  cube2.erase();
-  cube2.draw();
-  cube1.draw();
+  square2.erase();
 
+  square1.draw();
+  square2.draw();
+
+  //Begin
+  drawc1.beginPath();
+
+  //Lines between squares
+  drawc1.moveTo(square1.points[0][0], square1.points[0][1]);
+  drawc1.lineTo(square2.points[0][0], square2.points[0][1]);
+
+  drawc1.moveTo(square1.points[1][0], square1.points[1][1]);
+  drawc1.lineTo(square2.points[1][0], square2.points[1][1]);
+
+  drawc1.moveTo(square1.points[2][0], square1.points[2][1]);
+  drawc1.lineTo(square2.points[2][0], square2.points[2][1]);
+
+
+  drawc1.moveTo(square1.points[3][0], square1.points[3][1]);
+  drawc1.lineTo(square2.points[3][0], square2.points[3][1]);
+
+  //Stroke
+  drawc1.stroke();
   
+  //End
+  drawc1.closePath();
 
   window.requestAnimationFrame(animateCube);
 }
