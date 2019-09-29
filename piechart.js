@@ -3,7 +3,8 @@ var plotData = [
                   ["row1", "Insufficient data", "link"]
                 ];
 
-// Variables called by multiple functions and I'm to lazy to properly implement
+// Variables called by multiple functions and I'm to lazy to properly 
+var copyData = [];
 var dataContainer = [];
 var counterArr = [];
 var counterArrSum = 0;
@@ -40,24 +41,24 @@ function init()
   createPartitions(counterArr, counterArrSum);
 }
 
-/*
 
-<input type="file" />
+
+
 
 
 
 // THIS IS A SHITTY CSV PARSER
 function loadData()
 {
-  const input = document.querySelector('input[type="file"]');
+  //const input = document.querySelector('input[type="file"]');
 
-  input.style.top = "50%";
-  input.position = "absolute";
+  const input = document.querySelector('input-button');
 
   input.addEventListener('change', function(e)
   {
     const reader = new FileReader();
     reader.readAsText(input.files[0]);
+
     reader.onload = function()
     {
       const lines = reader.result.split('\n').map(function(line)
@@ -71,6 +72,7 @@ function loadData()
 
       init();
     }
+
   }, false);
 }
 
@@ -140,9 +142,37 @@ function gCiterate(strToFind)
   return [counter, strToFind];
 }
 
+/*
+function iCiterate(data, strToFind)
+{
+  var counter = 0;
+
+  for(var i = 0; i < data.length; i = i + 1)
+  {
+    if (data[i].includes(strToFind))
+    {
+      counter += data[i][0];
+      data[i] = "";
+    }
+  }
+
+  return [counter, strToFind];
+}
+*/
+
 //CREATE PIE CHART FROM DATA GATHERED
 function createPartitions(partitionData, partitionSum)
 {
+
+  /*
+  for (var i = 0; i < partitionData.length; i += 1)
+  {
+    var cat = partitionData[i][1];
+
+    for (var j = i + 1)
+
+  }
+  */
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 

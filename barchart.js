@@ -1,78 +1,5 @@
-//imports
-
-//Public variables
-var barChartplot = [
-	[10	, "1"],
-	[9	, "2"],
-	[8	, "3"],
-	[7	, "4"],
-	[6	, "5"],
-	[6	, "6"],
-	[4	, "7"],
-	[3	, "8"],
-	[2	, "9"],
-	[1	, "10"],
-	[27	, "11"],
-	[4	, "12"],
-	[2	, "13"],
-	[1	, "14"],
-	[5	, "15"],
-	[4	, "16"],
-	[2	, "17"],
-	[1	, "18"],
-	[30	, "19"],
-	[4	, "20"],
-	[2	, "21"],
-	[1	, "22"],
-	[9	, "23"],
-	[4	, "24"],
-	[8	, "25"],
-	[14	, "26"],
-	[2	, "27"],
-	[9	, "28"],
-	[27	, "29"],
-	[30 , "30"]
-];
-
-
-var resetPlot = [
-	[10	, "1"],
-	[9	, "2"],
-	[8	, "3"],
-	[7	, "4"],
-	[6	, "5"],
-	[6	, "6"],
-	[4	, "7"],
-	[3	, "8"],
-	[2	, "9"],
-	[1	, "10"],
-	[27	, "11"],
-	[4	, "12"],
-	[2	, "13"],
-	[1	, "14"],
-	[5	, "15"],
-	[4	, "16"],
-	[2	, "17"],
-	[1	, "18"],
-	[30	, "19"],
-	[4	, "20"],
-	[2	, "21"],
-	[1	, "22"],
-	[9	, "23"],
-	[4	, "24"],
-	[8	, "25"],
-	[14	, "26"],
-	[2	, "27"],
-	[9	, "28"],
-	[27	, "29"],
-	[30 , "30"]
-];
-
-
-var barChartObjects = [];
+//Contains the barchart class objects, only used for bubble sort
 var barChartIterateVars = [0, 0];
-var barChartQuickSort = [];
-var orderIndex = -1;
 
 //Piechart data collection points
 var barChartplotSumArray = [];
@@ -80,56 +7,107 @@ var barChartplotSwapCounter = 0;
 var barChartplotSum = 0;
 
 
-var quickSortLBUB = [];
-var LBUBcounter1 = 0;
-var LBUBCounter2 = 0;
+//	GLOBAL VARIABLES
 
-//Canvas object
+//Canvas objects
 let canvas2 = document.getElementById("canvas2");
 let drawc2 = canvas2.getContext('2d');
 
-//Size and width of the canvas
-canvas2.width = window.innerWidth - 50;
-canvas2.height = 400;
+//Objects that populate the barchart
+var barChartplot = [];
+var resetPlot = [];
+var barChartObjects = [];
 
-canvas2.style.left = "0%";
-canvas2.style.top = "0%";
-canvas2.style.position = "absolute";
+//These are the objects that help the orderedSwap function work
+var barChartQuickSort = [];
+var barChartSelectionSort = [];
+var barChartgnomeSort = [];
+var barChartMergeSort = [];
 
-//Determine which algorithm is running
+var swapOrder = [];
+var orderIndex = -1;
 var algoNo = 0;
-var p = 0;
-var pInd = 0;
 
-//Animation global variables
-var val1 = 0;
-var val2 = 0;
-
-var start = 0;
-var end = 0;
-
-var dX = 0;
-var middX = 0;
-
-var tempv1C = "";
-var tempv2C = "";
-var tempPivotC = "";
-
-//Translation for bounce
-var barChartTranslateRatio = 30;
-
-var translatedv1X = 0;
-var translatedv2X = 0;
-var translateddX = 0;
-var translatedmiddX = 0;
-
-var origStartY = 0;
-var origEndY = 0;
-
+//Objects for the animation cycle
+var bounceFinished = false;
 var dXCounter = 0;
 
-//Finished variable
-var bounceFinished = false;
+var source = 0;
+var destination = 0;
+var bounciness = 40;
+
+var dx = 0;
+var middx = 0;
+var dxsourceinterval = 0;
+var dxdestinationinterval = 0;
+var originalY = 0;
+
+var translatedx = 0;
+var translatedmiddx = 0;
+
+
+//	INIT
+function init()
+{
+	constructCanvas();
+	scramble();
+}
+
+function constructCanvas()
+{
+	//Size and width of the canvas
+	canvas2.width = window.innerWidth - 50;
+	canvas2.height = 400;
+
+	canvas2.style.left = "0%";
+	canvas2.style.top = "0%";
+	canvas2.style.position = "absolute";
+}
+
+//Scrambles and populates the empty barchart arrays
+function scramble()
+{
+	barChartplot = [];
+	barChartObjects = [];
+	barChartplotSumArray = [];
+	orderIndex = -1;
+
+	//Iterate and give random numbers to barChartplot
+	for (var i = 0; i < 40; i += 1)
+	{
+		var randomNumber = Math.floor(Math.random() * 100);
+		var category = i+1; 
+		barChartplot.push([randomNumber, category]);
+	}
+
+	//Put random values
+	resetPlot = [];
+	resetPlot = Array.from(barChartplot);
+
+	//Render the changes
+	constructBarChart(barChartplot);
+	createBars(barChartplot);
+}
+
+//Resets current array to unsorted state
+function resetBarChartplot()
+{
+	//Debug
+	console.log("called resetBarChartPlot");
+
+	//Reset algo values
+	barChartObjects = [];
+	barChartQuickSort = [];
+	orderIndex = -1;
+
+	//Reset plots
+	barChartplot = [];
+	barChartplot = Array.from(resetPlot);
+
+	//Draw the new data on the canvas
+	constructBarChart(barChartplot);
+	createBars(barChartplot);
+}
 
 
 class barChartObject
@@ -150,10 +128,14 @@ class barChartObject
 
 		//Color
 		this.color = color;
+		this.originalColor = color;
 
 		//Label coordinates
 		this.lX = lX;
 		this.lY = lY;
+
+		//Array init
+		barChartObjects.push(this);
 	}
 
 	draw()
@@ -181,135 +163,326 @@ class barChartObject
 	}
 
 	erase() { drawc2.clearRect(this.x-2, canvas2.height, this.width+4, -canvas2.height); }
+	revertColor() { this.color = this.originalColor; }
 }
 
 
-function init()
+function constructBarChart()
 {
-	constructBarChart(barChartplot);
-	createBars(barChartplot);
-}
+	//Calculate width of the bar
+	var widthOfBar = (canvas2.width / barChartplot.length);
+	var widthOfBar = widthOfBar * 0.8;
 
-//Reset
-function resetBarChartplot()
-{
-	//Debug
-	console.log("called resetBarChartPlot");
+	//Halfwidth for label coordinates
+	var halfWidthOfBar = widthOfBar * 0.3;
 
-	//Reset algo values
-	barChartObjects = [];
-	barChartQuickSort = [];
-	orderIndex = -1;
-
-	//Reset plots
-	barChartplot = [];
-	
-	for (var i = 0; i < resetPlot.length; i += 1)
+	for (var i = 0; i < barChartplot.length; i += 1)
 	{
-		barChartplot.push(resetPlot[i]);
+		//Calculate height of the bar
+		var heightOfBar = (canvas2.height - 70) / maxOfArray(barChartplot);
+		heightOfBar = (-heightOfBar * barChartplot[i][0]);
+
+		//Add the starting point for the width and height
+		var heightofBarStartingPoint = canvas2.height - 50;
+		var widthofBarStartingPoint = (widthOfBar * i) + (widthOfBar * 0.2 * i) + 30;
+
+		//Calculating the XY for the labels
+		var labelX = widthofBarStartingPoint + halfWidthOfBar;
+		var labelY = canvas2.height - 30;
+
+		//Create class object
+		var barObject = new barChartObject(
+													barChartplot[i][0], 
+													barChartplot[i][1], 
+													widthofBarStartingPoint, 
+													heightofBarStartingPoint, 
+													widthOfBar, 
+													heightOfBar, 
+													colorPicker(), 
+													labelX, 
+													labelY
+											);	
 	}
 
-	//Draw the new data on the canvas
-	constructBarChart(barChartplot);
-	createBars(barChartplot);
+	//Get the sum of barChartplot
+	barChartplotSum = sumOfArray(barChartplot);
+}
+
+function createBars()
+{
+	let canvas2 = document.getElementById("canvas2");
+	let drawc2 = canvas2.getContext('2d');
+
+	//Clear what was previously drawn
+	drawc2.clearRect(0, 0, canvas2.width, canvas2.height);
+
+	//Draw by referring to objects
+	for (var i = 0; i < barChartObjects.length; i += 1)
+	{
+		barChartObjects[i].draw();
+	}	
 }
 
 
-//Scramble
-function scramble()
+//Swap visualiser
+function orderedSwap(order)
 {
-	barChartplot = [];
-	barChartObjects = [];
-	barChartQuickSort = [];
-	barChartplotSumArray = [];
-	orderIndex = -1;
-
-	//Iterate and give random numbers
-	for (var i = 0; i < 30; i += 1)
-	{
-		var randomNumber = Math.floor(Math.random() * 100);
-		var category = i+1; 
-		barChartplot.push([randomNumber, category]);
-	}
-
-	//Put random values
-	resetPlot = [];
-
-	console.log("length: " + barChartplot.length);
-	
-	for (var j = 0; j < barChartplot.length; j += 1)
-	{
-		console.log("index: " + barChartplot[j]);
-		resetPlot.push(barChartplot[j]);
-	}
-	
-	//Render the changes
-	constructBarChart(barChartplot);
-	createBars(barChartplot);
-}
-
-
-//Bubble sort algorithm
-function bubbleSort(data)
-{
-	//Init
-	algoNo = 1;
-
-	var max = data.length-1;
+	orderIndex += 1;
 	bounceFinished = false;
 
-	if (barChartIterateVars[1] < max)
-	{
-		barChartIterateVars[1] += 1;
+	//swap
+	if (orderIndex < order.length) 
+	{ 
+		//Initialise
+		source 					= order[orderIndex][0];
+		destination				= order[orderIndex][1];
+		dXCounter 				= 0;
+		bounciness				= 40;
+		originalY 				= barChartObjects[source].y;
 
-		if (data[barChartIterateVars[0]].value > data[barChartIterateVars[1]].value) 
+		//Differentials
+		dx 						= Math.abs(barChartObjects[destination].x - barChartObjects[source].x);
+		middx 					= lowest(barChartObjects[source].x, barChartObjects[destination].x) + Math.abs(dx / 2);
+		dxsourceinterval		= (barChartObjects[destination].x - barChartObjects[source].x) / (12 + 2 * (Math.abs(source - destination)));
+		dxdestinationinterval	= (barChartObjects[source].x - barChartObjects[destination].x) / (12 + 2 * (Math.abs(source - destination)));
+
+		//Tranlate values for the purpose of the animation
+		translateddx 			= (dx / 2) / 40;
+		translatedmiddx 		= middx / 40;
+
+		//console.log(dx, middx, dxsourceinterval, dxdestinationinterval, originalY, translateddx, translatedmiddx);
+
+		//Change the color to red
+		barChartObjects[source].color 	= "#DC143C";
+		barChartObjects[destination].color 	= "#DC143C";
+
+		//Pivot to green if available
+		if (swapOrder[0].length >= 3) 
 		{
-			barChartplotSwapCounter += 1;
-			constructSwap(barChartIterateVars[0], barChartIterateVars[1]);
-			return;
+			printArr(swapOrder);
+			var pivot = order[orderIndex][2];
+			barChartObjects[pivot].color = "#00ff00";
+			barChartObjects[pivot].draw();
 		}
+
+		barChartObjects[source].draw();
+		barChartObjects[destination].draw();
+
+		animateLoader(bounceFinished);
 	}
 	else
 	{
-		if (barChartIterateVars[0] < max)
-		{
-			barChartIterateVars[0] += 1;
-			barChartIterateVars[1] = barChartIterateVars[0];
-		}
-	}
-	
-	if (barChartIterateVars[0] == max && barChartIterateVars[1] == max)
-	{
-		//Debug message
-		console.log("bubbleSort finished");
-
-		//Add piechart data
-		barChartplotSumArray.push([barChartplotSwapCounter, "Bubblesort"]);
-		createPartitions(barChartplotSumArray, sumOfArray(barChartplotSumArray));
-
 		//Reset values
-		barChartplotSwapCounter = 0;
-		barChartIterateVars = [0, 0];
-
-		return;
-	}
-	else
-	{
-		bubbleSort(data);
+		orderIndex 			= -1;
+		algoNo 				= 0;
 	}
 }
 
+
+function animateLoader(bounceFinished)
+{
+	//Debug
+	console.log("called animateLoader" + " " + bounceFinished);
+
+	//Call the animation
+	if (!bounceFinished) {setTimeout(function() {window.requestAnimationFrame(animateBarChartSwap);}, 20);}
+	else
+	{ animationFinished(); }
+}
+
+
+function animateBarChartSwap(timestamp)
+{
+	barChartObjects[source].x += dxsourceinterval;
+	barChartObjects[destination].x += dxdestinationinterval;
+
+	let translatedxs = (barChartObjects[source].x / bounciness) - translatedmiddx;
+	let translatedxd = (barChartObjects[destination].x / bounciness) - translatedmiddx;
+
+	let ys = -(-(Math.pow(translatedxs, 2)) + Math.pow(translateddx, 2)) + originalY;
+	let yd = -(-(Math.pow(translatedxd, 2)) + Math.pow(translateddx, 2)) + originalY;
+
+	barChartObjects[source].y = ys;
+	barChartObjects[destination].y = yd;
+
+	barChartObjects[source].lX += dxsourceinterval;
+	barChartObjects[destination].lX += dxdestinationinterval;
+
+	//Clear the canvas and render the board
+	createBars();
+	
+	//Render update
+	barChartObjects[source].draw();
+	barChartObjects[destination].draw();
+	
+	
+	//Increment the counter
+	dXCounter += 1;
+
+	if (dXCounter < (12 + 2 * (Math.abs(source - destination))))
+	{ window.requestAnimationFrame(animateBarChartSwap); }
+	else
+	{
+		//Reset
+		bounceFinished = true;
+
+		//Continue
+		setTimeout(function() { animateLoader(bounceFinished); }, 10);
+	}
+}
+
+
+function animationFinished()
+{	
+	//Debug
+	console.log("called animationFinished");
+
+	//Define the source and the destination
+	let source 			= swapOrder[orderIndex][0];
+	let destination		= swapOrder[orderIndex][1];
+
+	//Change color back to old colors
+	barChartObjects[source].revertColor();
+	barChartObjects[destination].revertColor();
+
+	//Visualise pivot if present
+	if (swapOrder[0].length >= 3) 
+	{
+		var pivot = swapOrder[orderIndex][2];
+		barChartObjects[pivot].revertColor();
+		barChartObjects[pivot].draw();
+	}
+
+	//Render with the correct colors, only insofar needed
+	barChartObjects[source].draw();
+	barChartObjects[destination].draw();
+
+	//Conduct an 'administrative swap'
+	swap(barChartObjects, source, destination);
+
+	//Callback to correct algorithm
+	orderedSwap(swapOrder);
+}
+
+
+//	ALGORITHMS
+
+function bubbleSort(data)
+{
+
+	swapOrder = [];
+
+	for (var i = 0; i < data.length; i += 1)
+	{
+		for (var j = i; j < data.length; j += 1)
+		{
+			if (data[i][0] > data[j][0])
+			{
+				swap(data, i, j);
+				swapOrder.push([i, j]);
+			}
+		}
+	}
+
+	//Add piechart data
+	barChartplotSumArray.push([swapOrder.length, "Bubblesort"]);
+	createPartitions(barChartplotSumArray, sumOfArray(barChartplotSumArray));
+
+	//Visualise the sort
+	orderedSwap(swapOrder);
+
+}
+
+//Function select
+function selectionSort(data)
+{
+	//Init
+	algoNo = 2;
+	swapOrder = [];
+	openIndex = -1;
+
+	var swapIndex = 0;
+	var minIndex = 0;
+
+	//Loop
+	for (var i = 0; i < data.length; i += 1)
+	{
+		var min = data[i][0];
+
+		for (var j = i; j < data.length; j += 1)
+		{
+			if (data[j][0] <= min) { min = data[j][0]; minIndex = j; }
+		}
+
+		//Swap
+		swap(data, swapIndex, minIndex);
+
+        //Order swap
+		swapOrder.push([swapIndex, minIndex]);
+		swapIndex += 1;
+	}
+
+	//Add piechart data
+	barChartplotSumArray.push([swapOrder.length, "Selectionsort"]);
+	createPartitions(barChartplotSumArray, sumOfArray(barChartplotSumArray));
+
+	//Visualise the process
+	orderedSwap(swapOrder);
+}
+
+//Gnome sort
+function gnomeSort(data)
+{
+	algoNo = 4;
+	swapOrder = [];
+	openIndex = -1;
+
+	for (var i = 1; i < data.length; i += 1)
+	{
+		var x = i;
+
+		while (x > 0 && data[x-1][0] > data[x][0])
+		{
+			//Create blueprint
+			swapOrder.push([x-1, x]);
+
+			//Swap
+			var temp = data[x-1];
+        	data[x-1] = data[x];
+        	data[x] = temp;
+
+        	//Iterate over vars
+        	x -= 1;
+		}
+	}
+
+	//Add piechart data
+	barChartplotSumArray.push([swapOrder.length, "Gnomesort"]);
+	createPartitions(barChartplotSumArray, sumOfArray(barChartplotSumArray));
+
+	//Visualise the process
+	orderedSwap(swapOrder);
+}
 
 //QuickSort algorithm
 function traditionalQuickSortExecutor(data)
 {
-	algoNo = 2;
-	barChartQuickSort = [];
+	//Init
+	algoNo = 3;
+	swapOrder = [];
 	openIndex = -1;
 
+	//Sort the array
 	traditionalQuickSort(0, data.length-1, data);
-	orderedSwap(barChartQuickSort);
+
+	//Add piechart data
+	barChartplotSumArray.push([swapOrder.length, "Quicksort"]);
+	createPartitions(barChartplotSumArray, sumOfArray(barChartplotSumArray));
+
+	//Visualise the process
+	orderedSwap(swapOrder);
 }
+
 
 function traditionalQuickSort(lb, ub, data)
 {
@@ -331,7 +504,6 @@ function traditionalPivot(lb, ub, data)
         
     while (1)
     {
-            
     	while (data[ub][0] > p)
         {
         	ub -= 1;
@@ -344,7 +516,7 @@ function traditionalPivot(lb, ub, data)
             
         if (lb >= ub) {return ub;}
 
-        barChartQuickSort.push([lb, ub, data[lb][0], data[ub][0]]);
+        swapOrder.push([lb, ub, i]);
         var temp = data[lb];
         data[lb] = data[ub];
         data[ub] = temp;
@@ -355,239 +527,124 @@ function traditionalPivot(lb, ub, data)
 }
 
 
-function orderedSwap(order)
-{
-	orderIndex += 1;
-	bounceFinished = false;
 
-	//swap
-	if (orderIndex < order.length) 
-	{ 
-		constructSwap(order[orderIndex][0], order[orderIndex][1]); 
+
+function mergeSortExecutor(data)
+{
+	//Init
+	swapOrder = [];
+	algoNo = 5;
+
+	//Start algorithm
+	mergeSort(data, 0, data.length-1);
+
+	//Visualise
+	orderedSwap(swapOrder);
+}
+
+
+function mergeSort(data, lb, ub)
+{
+	//Creation of helper array
+	//var helper = Array.from(data);
+
+	//Create pivot
+	var pivotIndex = Math.floor((lb + ub) / 2);
+	console.log(lb + " + ((" + ub + " - " + lb + ")" + " / " + "2" + " )) = " + pivotIndex);
+	console.log("new mergeSort call: " + lb + " " + pivotIndex + " " + ub);
+
+	if (lb < ub)
+	{
+		mergeSort(data, lb, pivotIndex);
+		mergeSort(data, pivotIndex + 1, ub);
+
+		console.log("mergesort execution: " + lb + " " + ub);
+		mergeSortMerge(data, lb, pivotIndex, ub);
 	}
 	else
 	{
-		//Add piechart data
-		barChartplotSumArray.push([barChartQuickSort.length, "Quicksort"]);
-		createPartitions(barChartplotSumArray, sumOfArray(barChartplotSumArray));
-
-		//Reset values
-		orderIndex = -1;
-	}
-}
-
-
-function constructBarChart(constructData)
-{
-	//Reset the sum of values
-	barChartplotSum = 0;
-
-	//Calculate width of the bar
-	var widthOfBar = (canvas2.width / constructData.length);
-	var widthOfBar = widthOfBar * 0.6;
-
-	//Halfwidth for label coordinates
-	var halfWidthOfBar = widthOfBar * 0.2;
-
-	for (var i = 0; i < constructData.length; i += 1)
-	{
-		//Calculate height of the bar
-		var heightOfBar = (canvas2.height - 70) / maxOfArray();
-		heightOfBar = (-heightOfBar * constructData[i][0]);
-
-		//Add the starting point for the width and height
-		var heightofBarStartingPoint = canvas2.height - 50;
-		var widthofBarStartingPoint = (widthOfBar * i) + (widthOfBar * 0.6 * i) + 30;
-
-		//Assign to barChartElement and create object
-		constructData[i] = [constructData[i][0], constructData[i][1], widthofBarStartingPoint, widthOfBar, heightofBarStartingPoint, heightOfBar];
-
-		//Calculating the XY for the labels
-		var labelX = widthofBarStartingPoint + halfWidthOfBar;
-		var labelY = canvas2.height - 30;
-
-		//Create object and push
-		var barObject = new barChartObject(constructData[i][0], constructData[i][1], widthofBarStartingPoint, heightofBarStartingPoint, widthOfBar, heightOfBar, colorPicker(), labelX, labelY);
-		barChartObjects.push(barObject);
-
-		//Getting the sum for the partition call
-		barChartplotSum += constructData[i][0];
-	}
-}
-
-function createBars(sourceArray)
-{
-	//Clear what was previously drawn
-	drawc2.clearRect(0, 0, canvas2.width, canvas2.height);
-
-	//Draw by referring to objects
-	for (var i = 0; i < sourceArray.length; i += 1)
-	{
-		barChartObjects[i].draw();
-	}	
-}
-
-function constructSwap(v1, v2)
-{	
-	//Debug
-	console.log("called constructSwap");
-	console.log("values: " + barChartObjects[val1].value + " " + barChartObjects[val2].value);
-
-	//Init the variables
-	val1 = v1;
-	val2 = v2;
-
-	//Retain colors before color change
-	tempv1C = barChartObjects[val1].color;
-	tempv2C = barChartObjects[val2].color;
-
-	//Capture original height values for the curvature to return to
-	origStartY = barChartObjects[start].y;
-	origEndY = barChartObjects[end].y;
-
-	//Change and draw color to signify the change
-	barChartObjects[val1].color = "#DC143C";
-	barChartObjects[val2].color = "#DC143C";
-
-	barChartObjects[val1].draw();
-	barChartObjects[val2].draw();
-
-	//Difference of pixels between the bars on the x-axis
-	dX = Math.abs(barChartObjects[val2].x - barChartObjects[val1].x);
-	dXCounter = 0;
-
-	//Determine which bar moves up the X-axis, and vice-versa
-	if (barChartObjects[val1].x > barChartObjects[val2].x)
-	{
-		start = val2;
-		end = val1;
-	}
-	else
-	{
-		start = val1;
-		end = val2;
+		console.log("the algorithm does not comply");
 	}
 
-	//Calculate midpoint of trajectory
-	middX = barChartObjects[start].x + (dX / 2);
-
-	//Translate
-	translatedmiddX = (middX / barChartTranslateRatio);
-	translateddX = (dX / 2) / barChartTranslateRatio;
-
-	//Call the animation mechanism
-	animateLoader(bounceFinished);
-}
-
-
-function animateLoader(bounceFinished)
-{
-	//Debug
-	console.log("called animateLoader" + " " + bounceFinished);
-
-	//Call the animation
-	if (!bounceFinished)
-	{
-		//Debug
-		console.log("calling animateBarChartSwap");
-
-		setTimeout(function() {window.requestAnimationFrame(animateBarChartSwap);}, 10);
-	}
-	else
-	{
-		//Call the finishing animation move
-		animationFinished();
-	}
-}
-
-
-function animateBarChartSwap(timestamp)
-{
-	//Move variables at (dX / 30) speed
-	barChartObjects[start].x += (dX / (12 + 3 * (Math.abs(val1 - val2))));
-	barChartObjects[end].x -= (dX / (12 + 3 * (Math.abs(val1 - val2))));
-
-	barChartObjects[start].lX += (dX / (12 + 3 * (Math.abs(val1 - val2))));
-	barChartObjects[end].lX -= (dX / (12 + 3 * (Math.abs(val1 - val2))));
-
-	//Translate
-	translatedv1X = (barChartObjects[start].x / barChartTranslateRatio) - translatedmiddX;
-	translatedv2X = (barChartObjects[end].x / barChartTranslateRatio) - translatedmiddX;
-
-	//Apply the hyperbolic formula, reverse y-axis value as the canvas counts height from top to bottom
-	var sY = -(-(Math.pow(translatedv1X, 2)) + Math.pow(translateddX, 2)) + origStartY;
-	var eY = -(-(Math.pow(translatedv2X, 2)) + Math.pow(translateddX, 2)) + origEndY;
-
-	//Labels to stay on a linear trajectory
-	barChartObjects[start].y = sY;
-	barChartObjects[end].y = eY;
 	
-	//Clear the canvas and render the board
-	createBars(barChartObjects);
 
-	//Color
-	barChartObjects[val1].draw();
-	barChartObjects[val2].draw();
+}
 
-	//Increment the counter
-	dXCounter += 1;
+function mergeSortMerge(data, lb, middle, ub)
+{
+	var low = lb;
+	var midpoint = middle;
+	var high = ub;
 
-	if (dXCounter < (12 + 3 * (Math.abs(val1 - val2))))
-	{ 
-		window.requestAnimationFrame(animateBarChartSwap); 
-	}
-	else
+	middle += 1;
+
+	console.log("low: ", low, "middle: ", middle, "high: ", high);
+
+	//Main
+	while (low <= middle && middle <= high)
 	{
-		//Reset
-		bounceFinished = true;
+		if (data[low][0] > data[middle][0])
+		{	
+			//Visual aid
+			swapOrder.push([low, middle, ub + 1]);
+			console.log("low: ", data[low][0], "middle: ", data[middle][0]);
+			console.log("The swap we got from this: " + low + " " + middle);
 
-		translatedv1X = 0;
-		translatedv2X = 0;
-		translateddX = 0;
-		translatedmiddX = 0;
+			//Re-arrange
+			var temp = data[middle];
+			data.splice(middle, 1);
+			data.splice(low, 0, temp);
 
-		origStartY = 0;
-		origEndY = 0;
-
-		dXCounter = 0;
-
-		//Continue
-		setTimeout(function() { animateLoader(bounceFinished); }, 10);
+			printArr(data);
+			
+			low += 1;
+		}
+		else
+		{
+			console.log("low: ", data[low][0], "middle: ", data[middle][0]);
+			middle += 1;
+		}
 	}
+
+	/*
+	//In case of inequalities
+	while (low < midpoint)
+	{
+		//Re-arrange
+		var temp = data[low];
+		data.splice(low, 1);
+		data.splice(high+1, 0, temp);
+		console.log("still values in lower half, moved to end: " + low, high);
+
+		low += 1;
+	}
+
+	while (middle <= high)
+	{
+		//Re-arrange
+		var temp = data[middle];
+		data.splice(middle, 1);
+		data.splice(high+1, 0, middle);
+		console.log("still values in lower half, moved to end: " + middle, high);
+
+		middle += 1;
+	}
+	*/
+
+
+
+	console.log("finished executing mergesort" + low, middle, high);
 }
 
 
-function animationFinished()
-{	
-	//Debug
-	console.log("called now");
-
-	//Change color back to old colors
-	barChartObjects[val1].color = tempv1C;
-	barChartObjects[val2].color = tempv2C;
-
-	//Render with the correct colors, only insofar needed
-	barChartObjects[val1].draw();
-	barChartObjects[val2].draw();
-
-	//Conduct an 'administrative swap'
-	var objTemp = barChartObjects[val1];
-	barChartObjects[val1] = barChartObjects[val2];
-	barChartObjects[val2] = objTemp;
-
-	//Callback to correct algorithm
-	if (algoNo == 1) { bubbleSort(barChartObjects); }
-	if (algoNo == 2) { orderedSwap(barChartQuickSort); }
-}
-
-
-function maxOfArray()
+//	HELPER FUNCTIONS
+function maxOfArray(arr)
 {
 	var max = 0;
 
-	for (var i = 0; i < barChartplot.length; i += 1)
+	for (var i = 0; i < arr.length; i += 1)
 	{
-		if (barChartplot[i][0] > max) { max = barChartplot[i][0]; }
+		if (arr[i][0] > max) { max = arr[i][0]; }
 	}
 
 	return max;
@@ -605,8 +662,26 @@ function sumOfArray(arr)
 	return sum;
 }
 
+function lowest(value1, value2)
+{
+	if (value1 < value2) { return value1; }
+	return value2;
+}
+
+function swap(arr, source, destination)
+{
+	var temp = arr[destination];
+	arr[destination] = arr[source];
+	arr[source] = temp;
+}
+
+function merge(arr, source, destination)
+{
+	var temp = data[source];
+	data.splice(source, 1);
+	data.splice(destination, 0, temp);
+}
+
+
+//	START
 window.onload = init();
-
-
-
-

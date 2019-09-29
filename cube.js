@@ -6,6 +6,14 @@ let drawc1 = c1.getContext('2d');
 c1.width = 200;
 c1.height = 90;
 
+//canvas properties
+let c2 = document.getElementById("canvas2");
+let drawc2 = c2.getContext('2d');
+
+//Size and width of the canvas
+c2.width = 200;
+c2.height = 90;
+
 c1.style.left = "0%";
 c1.style.top = "0%";
 
@@ -14,6 +22,107 @@ let div = document.getElementById("wrapperchild");
 
 var cube1;
 var cube2;
+
+var theta = 0;
+
+
+var rotationMatrix =  [
+                        [Math.cos(theta / 180 * Math.PI), -Math.sin(theta / 180 * Math.PI),0],
+                        [Math.sin(theta / 180 * Math.PI), Math.cos(theta / 180 * Math.PI),0],
+                        [0,0,1]
+                      ];
+
+
+var projectionMatrix =  [
+                            [1, 0, 0],
+                            [0, 1, 0],
+                            [0, 0, 1]
+                        ];
+
+
+class point
+{
+  constructor(x, y, z)
+  {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  }
+}
+
+class triangle
+{
+  constructor(point1, point2, point3)
+  {
+    this.points = [point1, point2, point3];
+  }
+
+  draw()
+  {
+    //Begin drawing
+    drawc2.beginPath();
+
+    //Draw the rectangle
+    drawc2.moveTo(this.points[0].x, this.points[0].y);
+
+    drawc2.lineTo(this.points[1].x, this.points[1].y);
+    drawc2.lineTo(this.points[2].x, this.points[2].y);
+    drawc2.lineTo(this.points[0].x, this.points[0].y);
+
+    //Stroke
+    drawc2.stroke();
+
+    //Close
+    drawc2.closePath();
+  }
+
+  erase() { drawc2.clearRect(0, 0, c2.width, c2.height); }
+}
+
+
+function matrixMultiply(tri, matrix)
+{
+  var np1 = new point(0, 0, 0);
+  var np2 = new point(0, 0, 0);
+  var np3 = new point(0, 0, 0);
+
+  var resultTriangle = new triangle(np1, np2, np3);
+
+  console.log("points: " + " " + resultTriangle.points[0].x + " " + resultTriangle.points[0].y + " " + resultTriangle.points[0].z);
+  console.log("points: " + " " + resultTriangle.points[1].x + " " + resultTriangle.points[1].y + " " + resultTriangle.points[1].z);
+  console.log("points: " + " " + resultTriangle.points[2].x + " " + resultTriangle.points[2].y + " " + resultTriangle.points[2].z);
+
+  console.log("tri: " + tri.points[0].x);
+
+  resultTriangle.points[0].x = ( tri.points[0].x * rotationMatrix[0][0] ) + ( tri.points[0].y * rotationMatrix[0][1] ) + ( tri.points[0].z * rotationMatrix[0][2] );
+  resultTriangle.points[0].y = ( tri.points[0].x * rotationMatrix[1][0] ) + ( tri.points[0].y * rotationMatrix[1][1] ) + ( tri.points[0].z * rotationMatrix[1][2] );
+  resultTriangle.points[0].z = ( tri.points[0].x * rotationMatrix[2][0] ) + ( tri.points[0].y * rotationMatrix[2][1] ) + ( tri.points[0].z * rotationMatrix[2][2] );
+  
+  resultTriangle.points[1].x = ( tri.points[1].x * rotationMatrix[0][0] ) + ( tri.points[1].y * rotationMatrix[0][1] ) + ( tri.points[1].z * rotationMatrix[0][2] );
+  resultTriangle.points[1].y = ( tri.points[1].x * rotationMatrix[1][0] ) + ( tri.points[1].y * rotationMatrix[1][1] ) + ( tri.points[1].z * rotationMatrix[1][2] );
+  resultTriangle.points[1].z = ( tri.points[1].x * rotationMatrix[2][0] ) + ( tri.points[1].y * rotationMatrix[2][1] ) + ( tri.points[1].z * rotationMatrix[2][2] );
+  
+  console.log("passed");
+
+  resultTriangle.points[2].x = ( tri.points[2].x * rotationMatrix[0][0] ) + ( tri.points[2].y * rotationMatrix[0][1] ) + ( tri.points[2].z * rotationMatrix[0][2] );
+  resultTriangle.points[2].y = ( tri.points[2].x * rotationMatrix[1][0] ) + ( tri.points[2].y * rotationMatrix[1][1] ) + ( tri.points[2].z * rotationMatrix[1][2] );
+  resultTriangle.points[2].z = ( tri.points[2].x * rotationMatrix[2][0] ) + ( tri.points[2].y * rotationMatrix[2][1] ) + ( tri.points[2].z * rotationMatrix[2][2] );
+
+
+  console.log("points: " + " " + resultTriangle.points[0].x + " " + resultTriangle.points[0].y + " " + resultTriangle.points[0].z);
+  console.log("points: " + " " + resultTriangle.points[1].x + " " + resultTriangle.points[1].y + " " + resultTriangle.points[1].z);
+  console.log("points: " + " " + resultTriangle.points[2].x + " " + resultTriangle.points[2].y + " " + resultTriangle.points[2].z);
+
+  console.log("success");
+}
+
+
+
+
+
+
+
+
 
 class cube
 {
@@ -106,6 +215,31 @@ function init()
 {
   square1 = new cube(40   , "#FFFFFF");
   square2 = new cube(40   , "#1ABC9C");
+
+  p1 = new point(c2.width / 2 - 10, c2.height / 2 + 20, 0);
+  p2 = new point(c2.width / 2 - 10, c2.height / 2 - 20, 0);
+  p3 = new point(c2.width / 2 + 10, c2.height / 2 - 20, 0);
+
+  triangle1 = new triangle(p1, p2, p3);
+
+  console.log("points: " + " " + triangle1.points[0].x + " " + triangle1.points[0].y + " " + triangle1.points[0].z);
+  console.log("points: " + " " + triangle1.points[1].x + " " + triangle1.points[1].y + " " + triangle1.points[1].z);
+  console.log("points: " + " " + triangle1.points[2].x + " " + triangle1.points[2].y + " " + triangle1.points[2].z);
+
+
+  triangle1.draw();
+
+  theta += 100;
+
+  matrixMultiply(triangle1, projectionMatrix);
+  matrixMultiply(triangle1, rotationMatrix);
+  
+
+  triangle1.erase();
+
+  triangle1.draw();
+
+  return;
 
   square1.setmidpoint(c1.width / 2, c1.height / 2 + (0.35 * square1.width));
   square2.setmidpoint(c1.width / 2, c1.height / 2 - (0.35 * square2.width));

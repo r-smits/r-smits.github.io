@@ -20,18 +20,28 @@
 
   <body>
 
+    <ul class = "menu-input">
+      <li class="input-button" onclick="loadData()">Load custom</li>
+      
+    </ul>
+
     <ul class="menu-ctn">
       <li class="scramble" onclick="scramble(barChartplot)">Scramble</li>
       <li class="reset" onclick="resetBarChartplot()">Reset</li>
     </ul>
 
+   
     <ul class="menu2-ctn">
-      <li class="bubble-sort" onclick="bubbleSort(barChartObjects)">Bubblesort</li>
-      <li class="traditional-quicksort" onclick="traditionalQuickSortExecutor(barChartplot)">Quicksort</li>
+      <li class="bubble-sort" onclick="bubbleSort(barChartplot)">Bubble sort</li>
+      <li class="selection-sort" onclick="selectionSort(barChartplot)">Selection sort</li>
+      <li class="gnome-sort" onclick="gnomeSort(barChartplot)">Gnome sort</li>
+      <li class="traditional-quicksort" onclick="traditionalQuickSortExecutor(barChartplot)">Quick sort</li>
+      <li class="merge-sort" onclick="mergeSortExecutor(barChartplot)">Merge sort</li>
     </ul>
-
+  
     <ul class="menu3-ctn">
-      <li class="print" onclick="printArr(barChartplotSumArray)">Print</li>
+      <li class="print" onclick="printArr(barChartplot)">Print</li>
+      <li class="print" onclick="printArr(sortArray)">Print</li>
     </ul>
 
   </body>
