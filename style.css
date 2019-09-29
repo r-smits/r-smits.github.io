@@ -3,6 +3,7 @@
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
+  /*background: #C0C0C0;*/
 }
 
 canvas
@@ -10,8 +11,10 @@ canvas
   margin-left: 20px;
   margin-right: 20px;
   margin-top: 20px;
-  border:1px solid black;
+  background: transparent;
+  border-bottom: : 5px inset red;
 }
+
 
 .menu-ctn
 {
@@ -21,6 +24,7 @@ canvas
   width: 200px;
   background-color: #f1f1f1;
   position: absolute;
+  border-top: 5px inset blue;
 }
 
 
@@ -32,7 +36,9 @@ canvas
   width: 200px;
   background-color: #f1f1f1;
   position: absolute;
+  border-top: 5px inset blue;
 }
+
 
 .menu3-ctn
 {
@@ -44,11 +50,20 @@ canvas
   position: absolute;
 }
 
-
+.menu-input
+{
+  list-style-type: none;
+  margin-left: 20px;
+  margin-top: 550px;
+  width: 200px;
+  background-color: #f1f1f1;
+  position: absolute;
+  border-top: 5px inset blue;
+}
 
 li
 {
-  display: block;
+  /*display: block;*/
   color: #000;
   padding: 8px 16px;
   text-decoration: none;
@@ -58,7 +73,7 @@ li
 li:hover
 {
   cursor: pointer;
-  background-color: #555;
+  background-color: #ADD8E6;
   color: white;
 }
 
