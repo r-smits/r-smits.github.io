@@ -153,6 +153,10 @@ class cube
                   ];
 
     this.color = color;
+
+    this.relativeMidpoint = [0, 0];
+    this.relativeRadius = 0;
+    this.relativeRadians = 0;
   }
 
   draw()
@@ -183,7 +187,7 @@ class cube
     //var
     var iterate = angle / 180 * Math.PI;
 
-    console.log("iterate: " + iterate);
+    //console.log("iterate: " + iterate);
 
     //Iterate through points
     for (var i = 0; i < this.points.length; i += 1)
@@ -192,7 +196,7 @@ class cube
       this.radians[i] += iterate;
       var rad = this.radians[i];
 
-      console.log("rad: " + rad * 180 / Math.PI);
+      //console.log("rad: " + rad * 180 / Math.PI);
 
       //Sin relates to X, Cos relates to Y (even though sin calculates opposite, cos relates to adjacent)
       var rx = Math.cos(rad) * this.radius + this.midpoint[0];
@@ -202,6 +206,54 @@ class cube
       this.points[i][0] = rx;
       this.points[i][1] = ry;
     }
+  }
+
+
+  makeRelativeTo(squareObject)
+  {
+    //Set relative midpoint
+    this.relativeMidpoint[0] = c1.width / 2;//squareObject.midpoint[0];
+    this.relativeMidpoint[1] = this.midpoint[1];//squareObject.midpoint[1];
+
+    console.log(this.relativeMidpoint[0] + " " + this.relativeMidpoint[1]);
+
+    //Calc hypothemus between midpoint 1 & midpoint 2
+    var rwidth = Math.abs(this.midpoint[0] - c1.width / 2);//squareObject.midpoint[0]);
+    var rheight = Math.abs(this.midpoint[1] - c1.height / 2); //squareObject.midpoint[1]);
+
+    var dwidth = this.midpoint[0] - c1.width / 2;
+    var dheight = this.midpoint[1] - c1.height / 2;
+
+    this.relativeRadius = Math.sqrt(Math.pow(dwidth, 2) + Math.pow(dheight, 2));
+
+    var rad = Math.asin(rheight / this.relativeRadius);
+
+    console.log("Math.asin(" + rheight + "/" + rwidth + "= " + rad);
+
+
+    this.relativeRadians = rad;
+  }
+
+  relativeRotate(angle)
+  {
+    //var
+    var iterate = angle / 180 * Math.PI;
+
+    //console.log("iterate: " + iterate);
+
+    //Get radians of point
+    this.relativeRadians += iterate;
+    var rad = this.relativeRadians;
+
+    //console.log("rad: " + rad * 180 / Math.PI);
+
+    //Sin relates to X, Cos relates to Y (even though sin calculates opposite, cos relates to adjacent)
+    var rx = Math.cos(rad) * this.relativeRadius + this.relativeMidpoint[0];
+    var ry = Math.sin(rad) * this.relativeRadius + this.relativeMidpoint[1];
+
+    //Save
+    this.midpoint[0] = rx;
+    this.midpoint[1] = ry;
   }
 
   setmidpoint(x, y)
@@ -216,33 +268,30 @@ function init()
   square1 = new cube(40   , "#FFFFFF");
   square2 = new cube(40   , "#1ABC9C");
 
-  p1 = new point(c2.width / 2 - 10, c2.height / 2 + 20, 0);
-  p2 = new point(c2.width / 2 - 10, c2.height / 2 - 20, 0);
-  p3 = new point(c2.width / 2 + 10, c2.height / 2 - 20, 0);
-
-  triangle1 = new triangle(p1, p2, p3);
-
-  console.log("points: " + " " + triangle1.points[0].x + " " + triangle1.points[0].y + " " + triangle1.points[0].z);
-  console.log("points: " + " " + triangle1.points[1].x + " " + triangle1.points[1].y + " " + triangle1.points[1].z);
-  console.log("points: " + " " + triangle1.points[2].x + " " + triangle1.points[2].y + " " + triangle1.points[2].z);
-
-
-  triangle1.draw();
-
-  theta += 100;
-
-  matrixMultiply(triangle1, projectionMatrix);
-  matrixMultiply(triangle1, rotationMatrix);
-  
-
-  triangle1.erase();
-
-  triangle1.draw();
-
-  return;
-
   square1.setmidpoint(c1.width / 2, c1.height / 2 + (0.35 * square1.width));
-  square2.setmidpoint(c1.width / 2, c1.height / 2 - (0.35 * square2.width));
+  square2.setmidpoint(c1.width / 2, c1.height / 2 - (0.40 * square2.width));
+
+  barA1 = new cube(10, "#FFFFFF");
+  barA2 = new cube(10, "#FFFFFF");
+
+  barB1 = new cube(10, "#FFFFFF");
+  barB2 = new cube(10, "#FFFFFF");
+
+  barA1.setmidpoint(c1.width / 2, c1.height / 2 + barA1.width);
+  barA2.setmidpoint(c1.width / 2, c1.height / 2 - barA1.width);
+
+  barB1.setmidpoint(c1.width / 2, c1.height / 2 + 1);
+  barB2.setmidpoint(c1.width / 2, c1.height / 2 + 1);
+
+  //Make bar relative to squares
+  barA1.makeRelativeTo(square1);
+  barA2.makeRelativeTo(square2);
+
+  //barB1.makeRelativeTo(square1);
+  //barB2.makeRelativeTo(square2);
+
+  console.log(barA1.relativeMidpoint + " " + barA1.relativeRadius + " " + barA1.relativeRadians * 180 / Math.PI);
+  console.log(barA2.relativeMidpoint + " " + barA2.relativeRadius + " " + barA2.relativeRadians * 180 / Math.PI);
 
 
   window.requestAnimationFrame(animateCube);
@@ -254,10 +303,30 @@ function animateCube(timestamp)
   square1.rotate(1.5);
   square2.rotate(1.5);
 
+  
+  barA1.relativeRotate(1.5);
+  barA2.relativeRotate(1.5);
+  /*
+  barB1.relativeRotate(1.5);
+  barB2.relativeRotate(1.5);
+  */
+
+  barA1.rotate(1.5);
+  barA2.rotate(1.5);
+
+  //barB1.rotate(1.5);
+  //barB2.rotate(1.5);
+
   square2.erase();
 
   square1.draw();
   square2.draw();
+
+  barA1.draw();
+  barA2.draw();
+
+  //barB1.draw();
+  //barB2.draw();
 
   //Begin
   drawc1.beginPath();
@@ -272,9 +341,21 @@ function animateCube(timestamp)
   drawc1.moveTo(square1.points[2][0], square1.points[2][1]);
   drawc1.lineTo(square2.points[2][0], square2.points[2][1]);
 
-
   drawc1.moveTo(square1.points[3][0], square1.points[3][1]);
   drawc1.lineTo(square2.points[3][0], square2.points[3][1]);
+
+  //Lines between barA
+  drawc1.moveTo(barA1.points[0][0], barA1.points[0][1]);
+  drawc1.lineTo(barA2.points[0][0], barA2.points[0][1]);
+
+  drawc1.moveTo(barA1.points[1][0], barA1.points[1][1]);
+  drawc1.lineTo(barA2.points[1][0], barA2.points[1][1]);
+
+  drawc1.moveTo(barA1.points[2][0], barA1.points[2][1]);
+  drawc1.lineTo(barA2.points[2][0], barA2.points[2][1]);
+
+  drawc1.moveTo(barA1.points[3][0], barA1.points[3][1]);
+  drawc1.lineTo(barA2.points[3][0], barA2.points[3][1]);
 
   //Stroke
   drawc1.stroke();
