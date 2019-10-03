@@ -43,7 +43,7 @@ function constructCanvas()
 {
 	//Size and width of the canvas
 	canvas2.width = window.innerWidth * 0.8;
-	canvas2.height = 400;
+	canvas2.height = 500;
 
 	canvas2.style.left = "16%";
 	canvas2.style.top = "0%";
@@ -59,7 +59,7 @@ function scramble()
 	orderIndex = -1;
 
 	//Iterate and give random numbers to barChartplot
-	for (var i = 0; i < 40; i += 1)
+	for (var i = 0; i < 50; i += 1)
 	{
 		var randomNumber = Math.floor(Math.random() * 100);
 		var category = i+1; 
@@ -213,7 +213,7 @@ function orderedSwap(order)
 		let destination				= order[orderIndex][1];
 		
 		//Differentials
-		let cycleNo					= (12 + 2 * (Math.abs(source - destination)));
+		let cycleNo					= (8 + 2 * (Math.abs(source - destination)));
 		let dx 						= Math.abs(barChartObjects[destination].x - barChartObjects[source].x);
 		let dxsourceinterval		= (barChartObjects[destination].x - barChartObjects[source].x) / cycleNo;
 		let dxdestinationinterval	= (barChartObjects[source].x - barChartObjects[destination].x) / cycleNo;
@@ -265,7 +265,7 @@ function orderedMerge(order)
 		let overalSource	 	= order[orderIndex][0];
 		let overalDestination	= order[orderIndex][1];
 
-		let cycleNo				= (12 + 2 * (Math.abs(overalSource - overalDestination)));
+		let cycleNo				= (8 + 2 * (Math.abs(overalSource - overalDestination)));
 
 		for (var i = overalDestination; i < overalSource; i += 1)
 		{
@@ -371,7 +371,6 @@ function animateBarChartSwap(timestamp)
 	}
 }
 
-
 function animationFinished()
 {	
 	//Debug
@@ -454,6 +453,63 @@ function bubbleSort(data)
 
 }
 
+function insertionSort(data)
+{
+	//Init
+	swapOrder = [];
+	openIndex = -1;
+
+	for (var swapIndex = 1; swapIndex < data.length; swapIndex += 1)
+	{
+		var minIndex = swapIndex;
+
+		while (minIndex > 0 && data[minIndex-1][0] >= data[minIndex][0])
+		{
+			swapOrder.push([minIndex-1, minIndex]);
+			swap(data, minIndex, minIndex-1);
+			minIndex -= 1;
+		}
+	}
+
+	//Add piechart data
+	barChartplotSumArray.push([swapOrder.length, "Insertionsort"]);
+	createPartitions(barChartplotSumArray, sumOfArray(barChartplotSumArray));
+
+	//Visualise the process
+	orderedSwap(swapOrder);
+}
+
+//Gnome sort
+function gnomeSort(data)
+{
+	swapOrder = [];
+	openIndex = -1;
+
+	var pos = 0;
+
+	while (pos < data.length)
+	{
+
+		if (pos == 0 || data[pos][0] >= data[pos-1][0])
+		{
+			pos += 1;
+		}
+		else
+		{
+			swapOrder.push([pos, pos-1]);
+			swap(data, pos, pos-1);
+			pos -= 1;
+		}
+	}
+
+	//Add piechart data
+	barChartplotSumArray.push([swapOrder.length, "Gnomesort"]);
+	createPartitions(barChartplotSumArray, sumOfArray(barChartplotSumArray));
+
+	//Visualise the process
+	orderedSwap(swapOrder);
+}
+
 //Function select
 function selectionSort(data)
 {
@@ -490,38 +546,41 @@ function selectionSort(data)
 	orderedSwap(swapOrder);
 }
 
-//Gnome sort
-function gnomeSort(data)
+function shellSort(data)
 {
+	//Init
 	swapOrder = [];
 	openIndex = -1;
 
-	for (var i = 1; i < data.length; i += 1)
+	var gaps = [701, 301, 132, 57, 23, 10, 4, 1];
+
+	for (var g = 0; g < gaps.length; g += 1)
 	{
-		var x = i;
+		var gap = gaps[g];
 
-		while (x > 0 && data[x-1][0] > data[x][0])
+		for (var check = gap; check < data.length; check += 1)
 		{
-			//Create blueprint
-			swapOrder.push([x-1, x]);
 
-			//Swap
-			var temp = data[x-1];
-        	data[x-1] = data[x];
-        	data[x] = temp;
+			var temp = data[check][0];
 
-        	//Iterate over vars
-        	x -= 1;
+			for (var index = check; index >= gap && data[index - gap][0] > temp; index -= gap)
+			{
+
+				swapOrder.push([index, index-gap]);
+				swap(data, index, index-gap);
+			}
 		}
 	}
 
 	//Add piechart data
-	barChartplotSumArray.push([swapOrder.length, "Gnomesort"]);
+	barChartplotSumArray.push([swapOrder.length, "Shell sort"]);
 	createPartitions(barChartplotSumArray, sumOfArray(barChartplotSumArray));
 
 	//Visualise the process
 	orderedSwap(swapOrder);
 }
+
+
 
 //QuickSort algorithm
 function traditionalQuickSortExecutor(data)
@@ -643,6 +702,65 @@ function mergeSortMerge(data, l, m, h)
 			high += 1;
 		} 
 		else if (data[low][0] < data[high][0]) { low += 1; }
+	}
+}
+
+
+//Heapsort
+function heapSort(data)
+{
+	swapOrder = [];
+	algoNo = 6;
+
+	var n = data.length-1;
+	maxHeap(data, n);
+
+	for (var i = data.length-1; i >= 0; i -= 1)
+	{
+		swapOrder.push([0, i]);
+		swap(data, 0, i);
+
+		n -= 1;
+
+		heapify(data, 0, n);
+	}
+
+	//Add piechart data
+	barChartplotSumArray.push([swapOrder.length, "HeapSort"]);
+	createPartitions(barChartplotSumArray, sumOfArray(barChartplotSumArray));
+
+	//
+	printArr(swapOrder);
+
+	//Visualise
+	orderedSwap(swapOrder);
+}
+
+function maxHeap(data, n)
+{
+	for (var i = Math.floor((data.length-1) / 2); i >= 0; i -= 1)
+	{
+		heapify(data, i, n);
+	}
+}
+
+function heapify(data, i, n)
+{
+	var leftchild = i * 2 + 1;
+	var rightchild = i * 2 + 2;
+
+	var max = i;
+
+	if (leftchild <= n && data[leftchild][0] > data[i][0]) { max = leftchild; 
+	}
+
+	if (rightchild <= n && data[rightchild][0] > data[max][0]) { max = rightchild; }
+
+	if (max != i)
+	{
+		swapOrder.push([i, max]);
+		swap(data, i, max);
+		heapify(data, max, n);
 	}
 }
 

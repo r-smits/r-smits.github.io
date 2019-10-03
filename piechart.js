@@ -17,13 +17,13 @@ let canvas = document.getElementById("canvas1");
 let ctx = canvas.getContext('2d');
 
 // Sizing variables
-canvas.width = window.innerWidth / 2 - 50;
-canvas.height = window.innerHeight / 2 - 80;
+canvas.width = 0.3 * window.innerWidth;
+canvas.height = 0.3 * window.innerHeight;
 
 var halfWidth = window.innerWidth / 2;
 
-canvas.style.left = "50%";
-canvas.style.top = "425px";
+canvas.style.left = "70%";
+canvas.style.top = "63%";
 canvas.style.position = "absolute";
 
 if (canvas.width < canvas.height)
