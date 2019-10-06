@@ -43,7 +43,7 @@ function constructCanvas()
 {
 	//Size and width of the canvas
 	canvas2.width = window.innerWidth * 0.8;
-	canvas2.height = 500;
+	canvas2.height = 450;
 
 	canvas2.style.left = "16%";
 	canvas2.style.top = "0%";
