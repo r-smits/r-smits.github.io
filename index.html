@@ -4,12 +4,9 @@
 
 		canvas
 		{
-		  margin-left: 45px;
-		  margin-right: 20px;
-		  margin-top: 70px;
 		  display:grid;
-		  /*grid-template-columns: 25%;*/
 		  background: transparent;
+		  position: absolute;
 		}
 
 		
@@ -18,8 +15,7 @@
 			margin-left: 20px;
 			margin-top: 20px;
 			display:grid;
-			grid-template-columns: 300px;
-			
+			grid-template-columns: 1200px;
 		}
 
 		.wrapper > div
@@ -33,12 +29,17 @@
 			background:#ddd;
 			border: 1px solid #000000;
 		}
+
+		.wrapper > div > p
+		{
+			margin-left: 220px;
+		}
 		
 	</style>
 
 	<body>
 
-		<canvas id="canvas2"></canvas>
+		
 
 		<strong><title> r-smits - Portfolio ></title></strong>
 		<p><strong>Portfolio - r-smits (09/2019)</strong></p>
@@ -51,9 +52,24 @@
 
 				<canvas id="canvas1"></canvas>
 
+
 				<p><br><strong>Algochart - </strong><a href="algochart.html">Algochart v. 0.05</a></p>
-				<p><u>Description</u><br>This projects aims to use simple mathematical concepts and javascript to avoid using existing libraries as much as possible. I code without external libraries because I believe it is a good way to champion new challenges and learn as much as possible in the process.<br>
-				<br>Algochart was born in an attempt to visualise various sorting algorithms and is still in a conceptual phase.</p>
+				<p><u>Description</u><br>This projects aims to use simple mathematical concepts and javascript to avoid using existing libraries as much as possible. Coded without external libraries to champion new challenges and learn as much as possible in the process.<br>
+				<br>Algochart was born in an attempt to visualise various sorting algorithms.</p>
+
+			</div>
+
+		</div>
+
+		<div class="wrapper">
+
+			<div class="wrapperchild2">
+
+				<canvas id="canvas2"></canvas>
+
+				<p><br><strong>GlobeTrotter - </strong><a href="globetrotter.html">GlobeTrotter v. 0.01</a></p>
+				<p><u>Description</u><br>This projects aims to create an accurate mercator projection of earth. The aim is to add interactive elements to the globe in later releases. Currenlty working on increasing rendering efficiency as the projection matrix multiplications on > 5000 points is creating latency issues.<br>
+				<br>To achieve smoother animation, V. 0.02 will add dynamic line simplification through application of the visvalingam-whyatt algorithm. V. 0.03 will add linear interpolation and click event handling to support interactive rotation.</p>
 
 			</div>
 
@@ -62,5 +78,6 @@
 	</body>
 
 	<script type="text/javascript", src="chart3D.js"></script>
+	<script type="text/javascript", src="block.js"></script>
 		
 </html>

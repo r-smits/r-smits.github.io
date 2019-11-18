@@ -1,6 +1,9 @@
 //canvas properties
-let c1 = document.getElementById("canvas1");
+let c1 = document.getElementById("canvas2");
 let drawc1 = c1.getContext('2d');
+
+//Append to the right div
+let div2 = document.getElementById("wrapperchild2");
 
 //Size and width of the canvas
 c1.width = 200;
@@ -18,7 +21,7 @@ c1.style.left = "0%";
 c1.style.top = "0%";
 
 //Append to the right div
-let div = document.getElementById("wrapperchild");
+//let div = document.getElementById("wrapperchild");
 
 var cube1;
 var cube2;
@@ -40,7 +43,7 @@ var projectionMatrix =  [
                         ];
 
 
-class point
+class point2
 {
   constructor(x, y, z)
   {
@@ -50,7 +53,7 @@ class point
   }
 }
 
-class triangle
+class triangle2
 {
   constructor(point1, point2, point3)
   {
@@ -82,11 +85,11 @@ class triangle
 
 function matrixMultiply(tri, matrix)
 {
-  var np1 = new point(0, 0, 0);
-  var np2 = new point(0, 0, 0);
-  var np3 = new point(0, 0, 0);
+  var np1 = new point2(0, 0, 0);
+  var np2 = new point2(0, 0, 0);
+  var np3 = new point2(0, 0, 0);
 
-  var resultTriangle = new triangle(np1, np2, np3);
+  var resultTriangle = new triangle2(np1, np2, np3);
 
   console.log("points: " + " " + resultTriangle.points[0].x + " " + resultTriangle.points[0].y + " " + resultTriangle.points[0].z);
   console.log("points: " + " " + resultTriangle.points[1].x + " " + resultTriangle.points[1].y + " " + resultTriangle.points[1].z);

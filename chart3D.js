@@ -1,7 +1,9 @@
 
 //Canvas objects
-let canvas = document.getElementById("canvas2");
+let canvas = document.getElementById("canvas1");
+
 let draw = canvas.getContext('2d');
+
 
 //Append to the right div
 let div = document.getElementById("wrapperchild");
@@ -20,9 +22,11 @@ function initCanvas()
   canvas.width = 250;
   canvas.height = 250;
 
-  canvas.style.left = "0%";
-  canvas.style.top = "0%";
+  canvas.style.left = 20;
+  canvas.style.top = 60;
   canvas.style.position = "absolute";
+  canvas.style.display = "grid";
+
 }
 
 var projectorMatrix = [[1, 0, 0], [0, 1, 0], [0, 0, 0]];

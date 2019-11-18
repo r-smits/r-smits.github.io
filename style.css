@@ -13,6 +13,7 @@ canvas
   margin-top: 20px;
   background: transparent;
   border-bottom: : 5px inset red;
+  position: absolute;
 }
 
 
