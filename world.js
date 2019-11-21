@@ -6,6 +6,8 @@ var quarterCanvas = 0;
 var halfCanvas = 0;
 var twoPI = 2 * Math.PI;
 
+var transparency = 0;
+
 var reverseNormalizedCanvasWidth = 0;
 
 //Collection of objects
@@ -477,8 +479,8 @@ function initScene()
   buildPolygon(CzechRepublic);
   buildPolygon(Germany);
   buildPolygon(Djibouti);
-  buildPolygon(Denmark1);
-  buildPolygon(Denmark2);
+  //buildPolygon(Denmark1);
+  //buildPolygon(Denmark2);
   buildPolygon(DominicanRepublic);
   buildPolygon(Algeria);
   buildPolygon(Ecuador);
@@ -591,7 +593,7 @@ function initScene()
   buildPolygon(Russia9);
   buildPolygon(Russia10);
   buildPolygon(Russia11);
-
+  
   buildPolygon(Nicaragua);
   buildPolygon(Netherlands);
   buildPolygon(Norway1);
@@ -1092,8 +1094,6 @@ function printAverageTime(){
 
 objArray.rotate = function(dx, dy, dz) {
 
-  console.log(dy);
-
   angleX += (dx / 180 * Math.PI);
   angleY += (dy / 180 * Math.PI);
   angleZ += (dz / 180 * Math.PI);
@@ -1132,7 +1132,7 @@ objArray.rotate = function(dx, dy, dz) {
       var py = polygon.tris[i][1];
 
       newpoint[2] = Azx * px + Azy * py + Azz * pz;
-      if (newpoint[2] > 0) continue;
+      if (newpoint[2] > transparency) continue;
 
       newpoint[0] = Axx * px + Axy * py + Axz * pz;
       newpoint[1] = Ayx * px + Ayy * py + Ayz * pz;
