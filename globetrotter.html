@@ -10,13 +10,102 @@
 		  background: transparent;
 		}
 
+		.vw
+		{
+			margin-left: 20px;
+			margin-top: 20px;
+			margin-bottom: 10px;
+			display:grid;
+			grid-template-columns: 250px;
+			
+		}
+
+		.vw > div
+		{
+			background:#eee;
+			border: 1px solid #000000;
+		}
+
+		.vw > div > p
+		{
+			margin-left: 20px;
+		}
+
+		.vw > div > select
+		{
+			margin-left: 20px;
+			margin-bottom: 20px;
+		}
+
+		.vw > div > input
+		{
+			margin-left: 20px;
+			width: 140px;
+			margin-bottom: 10px;
+		}
+
 	</style>
 
 	<body>
 		<canvas id="canvas"></canvas>
+
+		
+
+		<div class="vw">
+
+			<div>
+
+				<p><u>Pitch, jaw and roll</u><br />
+				(Moving the elemental axes)</p>
+
+				<input id="pitch" placeholder="pitch">
+				<button id="pitchb" onclick="pitch()">Confirm</button>
+				<input id="jaw" placeholder="jaw">
+				<button id="jawb" onclick="jaw()">Confirm</button>
+				<input id="roll" placeholder="roll">
+				<button id="rollb" onclick="roll()">Confirm</button>
+
+			</div>
+		</div>
+
+		<div class="vw">
+
+			<div>
+
+				<p><u>Visvalingam-whyatt algorithm</u><br/>
+				(Line simplification)<br/><br/>
+				Topology does not yet remain intact. New version (v. 0.03) aims to introduce shared edges.</p>
+
+				<select id="list" onchange="getVal()">
+					
+					<option value="0.01">0.01 - Almost no difference</option>
+					<option value="0.06">0.06 - A little difference</option>
+					<option value="0.10">0.10 - Performance / quality ratio</option>
+					<option value="0.25">0.25 - Wibbely wobbely</option>
+					<option value="0.50">0.50 - Reduxxx</option>
+
+				</select>
+			</div>
+		</div>
+
 	</body>
 
 	<script type="text/javascript", src="./world.js"></script>
+
+	<script>
+
+		function getVal() {
+
+			animate = false;
+			var val = document.getElementById("list").value;
+			init(val, dx, dy, dz);
+		}
+
+		function pitch() { let val = document.getElementById("pitch").value; dx = val.replace(/[^a-z0-9]/gi,''); }
+		function jaw() { let val = document.getElementById("jaw").value; dy = val.replace(/[^a-z0-9]/gi,''); }
+		function roll() { let val = document.getElementById("roll").value; dz = val.replace(/[^a-z0-9]/gi,''); }
+
+	</script>
 
 		
 </html>
