@@ -40,7 +40,13 @@
 		.vw > div > input
 		{
 			margin-left: 20px;
-			width: 140px;
+			width: 130px;
+			margin-bottom: 10px;
+		}
+
+		.vw > div > button
+		{
+			margin-left: 20px;
 			margin-bottom: 10px;
 		}
 
@@ -88,6 +94,19 @@
 			</div>
 		</div>
 
+		<div class="vw">
+
+			<div>
+
+				<p><u>Circle culling</u><br/>
+				(Transparency)<br/><br/>
+				Generally better performance.</p>
+
+				<button id="rollb" onclick="cullingSwitch()">Switch</button>
+
+			</div>
+		</div>
+
 	</body>
 
 	<script type="text/javascript", src="./world.js"></script>
@@ -98,12 +117,17 @@
 
 			animate = false;
 			var val = document.getElementById("list").value;
-			init(val, dx, dy, dz);
+			init(val, 0, 0, 0);
 		}
 
-		function pitch() { let val = document.getElementById("pitch").value; dx = val.replace(/[^a-z0-9]/gi,''); }
-		function jaw() { let val = document.getElementById("jaw").value; dy = val.replace(/[^a-z0-9]/gi,''); }
-		function roll() { let val = document.getElementById("roll").value; dz = val.replace(/[^a-z0-9]/gi,''); }
+		function pitch() { dx =document.getElementById("pitch").value; }
+		function jaw() { dy = document.getElementById("jaw").value; }
+		function roll() { dz = document.getElementById("roll").value; }
+
+		function cullingSwitch() {
+			if (transparency == 0) { transparency = Infinity; } else { transparency = 0; } 
+			console.log(transparency); 
+		}
 
 	</script>
 
