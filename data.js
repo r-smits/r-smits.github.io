@@ -3,9 +3,12 @@ function set(input, mercator) {
 	console.log(input);
 
 	object.coordinates = input.arcs; 
-	object.geometries = input.objects.countries.geometries;
 	object.translate = [];
 
+	//Only used to detect shape click events
+	geometries = input.objects.countries.geometries;
+	console.log("again: ", geometries);
+	
 	for (var i = 0; i < object.coordinates.length; i ++) { object.translate.push([]); }
 	
 	object.pitch = 0;
@@ -35,7 +38,6 @@ function set(input, mercator) {
 
 
 function deltaReverse() { 
-
 
 	for (var i = 0; i < object.coordinates.length; i ++) {
 

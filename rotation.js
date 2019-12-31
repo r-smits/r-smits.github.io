@@ -52,17 +52,18 @@ object.rotate = function(dx, dy, dz) {
     for (var i = this.translate.length; i < this.coordinates.length; i ++) { this.translate[i] = []; }
 
     for (var i = 0, n = this.coordinates.length; i < n; i ++) {
-        this.translate[i].length = 0;
+        this.translate[i].length = 0, this.translate[i].index = i;
         for (var ii = 0, m = this.coordinates[i].length; ii < m; ii ++) {
 
             let px = this.coordinates[i][ii][0];
             let py = this.coordinates[i][ii][1];
             let pz = this.coordinates[i][ii][2];
 
-            let pz1 = this.r31 * px + this.r32 * py + this.r33 * pz;
-            if (transparency && pz1 < 0) continue;
-            
-            this.translate[i][this.translate[i].length] = [this.r11 * px + this.r12 * py + this.r13 * pz, this.r21 * px + this.r22 * py + this.r23 * pz, pz1];
+            let pxx = this.r11 * px + this.r12 * py + this.r13 * pz;
+            let pyy = this.r21 * px + this.r22 * py + this.r23 * pz;
+            let pzz = this.r31 * px + this.r32 * py + this.r33 * pz;
+
+            (transparency && pzz < 0) ? 0 : this.translate[i][this.translate[i].length] = [pxx, pyy, pzz];
 }}}
 
 object.resize = function() {

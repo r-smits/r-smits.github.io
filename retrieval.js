@@ -25,15 +25,16 @@ function initRetrieval() {
 }
 
 
+
 function initCanvas()
 {
-  canvas.height = canvas.width = 750;
-  canvas.style.left = "20%";
+  canvas.height = canvas.width = 700;
+  canvas.style.left = "30%";
   canvas.style.bottom = "3%";
-  canvas.style.top = "1%";
+  canvas.style.top = "0%";
   canvas.style.position = "absolute";
 
-  context.lineWidth = 1;
+  context.lineWidth = 0.5;
 
   (canvas.height < canvas.width) ? halfCanvas = canvas.height / 2 : halfCanvas = canvas.width / 2;
 }
@@ -48,6 +49,10 @@ function initBackground() {
   	background.style.bottom = canvas.style.bottom;
   	background.style.top = canvas.style.top;
   	background.style.position = canvas.style.position;
+
+  	background.addEventListener('mousedown', click, false);
+
+  	backgroundcontext.lineWidth = 0.5;
 
 	backgroundcontext.beginPath();
 	backgroundcontext.arc(halfCanvas, halfCanvas, halfCanvas, 0, twoPI);
@@ -67,6 +72,15 @@ function retrieveGeoSpatialData() {
   return httpreq.responseText;
 }
 
-function send(topology) { received(0, 0.5, 0); }
+function send(topology) { received(0, 0.3, 0); }
 
 window.onload = initRetrieval();
+
+function click(event) {
+  let coordinate = getCoordinate(event);
+  console.log(coordinate);
+  findIntersect(coordinate);
+}
+
+
+

@@ -12,8 +12,8 @@
 
 		.vw
 		{
-			margin-left: 20px;
-			margin-top: 20px;
+			margin-left: 50px;
+			margin-top: 30px;
 			margin-bottom: 10px;
 			display:grid;
 			grid-template-columns: 250px;
@@ -50,6 +50,29 @@
 			margin-bottom: 10px;
 		}
 
+
+		.div-table {
+		  display: table;         
+		  width: auto;         
+		  background-color: #eee;         
+		  border: 1px solid #666666;         
+		  border-spacing: 5px; /* cellspacing:poor IE support for  this */
+		  margin-left: 50px;
+		  margin-top: 110px;
+
+		}
+		.div-table-row {
+		  display: table-row;
+		  width: auto;
+		  clear: both;
+		}
+		.div-table-col {
+		  float: left; /* fix for  buggy browsers */
+		  display: table-column;         
+		  width: 400px;         
+		  background-color: #ccc;  
+		}
+
 	</style>
 
 	<body>
@@ -62,6 +85,7 @@
 
 				<p><u>Pitch, jaw and roll</u><br />
 				(Moving the elemental axes)</p>
+				<br />
 
 				<input id="pitch" placeholder="pitch">
 				<button id="pitchb" onclick="pitch()">Confirm</button>
@@ -69,6 +93,8 @@
 				<button id="jawb" onclick="jaw()">Confirm</button>
 				<input id="roll" placeholder="roll">
 				<button id="rollb" onclick="roll()">Confirm</button>
+
+				<br/>
 
 			</div>
 		</div>
@@ -80,6 +106,7 @@
 				<p><u>Visvalingam-whyatt algorithm</u><br/>
 				(Line simplification)<br/><br/>
 				V. 0.03: <br/>- Preserves topology. <br/>- Dynamic adjustment!</p>
+				<br/>
 
 				<select id="list" onchange="getVal()">
 					
@@ -101,18 +128,62 @@
 				<p><u>Circle culling</u><br/>
 				(Transparency)<br/><br/>
 				Generally better performance.</p>
+				<br/>
+				<br/>
 
 				<button id="rollb" onclick="cullingSwitch()">Switch</button>
 
 			</div>
 		</div>
 
+		<form id="form1">
+	      <div class="div-table">
+	             <div class="div-table-row">
+	                <div class = "div-table-col", id="cselect" align="left">Selected country</div>
+	                <div class = "div-table-col", id="details">Details</div>
+	                <div class = "div-table-col", id="resource">Link to resource</div>
+	             </div>
+	            <div class="div-table-row">
+	                <div class = "div-table-col", id="c1r2" align="left"> </div>
+	                <div class = "div-table-col", id="c2r2"> </div>
+	                <div class = "div-table-col", id="c3r2"> </div>
+	            </div>
+	            <div class="div-table-row-4">
+	                <div class = "div-table-col", id="c1r3" align="left"> </div>
+	                <div class = "div-table-col", id="c2r3"> </div>
+	                <div class = "div-table-col", id="c3r3"> </div>
+	           </div>
+	           <div class="div-table-row-4">
+	                <div class = "div-table-col", id="c1r4" align="left"> </div>
+	                <div class = "div-table-col", id="c2r4"> </div>
+	                <div class = "div-table-col", id="c3r4"> </div>
+	           </div>
+	           <div class="div-table-row-3">
+	                <div class = "div-table-col", id="c1r5" align="left"> </div>
+	                <div class = "div-table-col", id="c2r5"></div>
+	                <div class = "div-table-col", id="c3r5"></div>
+	           </div>
+	           <div class="div-table-row-4">
+	                <div class="div-table-col-1"></div>
+	                <div class="div-table-col-2"></div>
+	                <div class="div-table-col-3"></div>
+	           </div>
+	           <div class="div-table-row-4">
+	                <div class="div-table-col-1"></div>
+	                <div class="div-table-col-2"></div>
+	                <div class="div-table-col-3"></div>
+	           </div>
+	      </div>
+	  	</form>
+
 	</body>
 	
 	<script type="text/javascript", src="./rotation.js"></script>
 	<script type="text/javascript", src="./visvalingam.js"></script>
 	<script type="text/javascript", src="./data.js"></script>
+	<script type="text/javascript", src="./winding.js"></script>
 	<script type="text/javascript", src="./retrieval.js"></script>
+	
 
 	<script>
 
