@@ -2,6 +2,9 @@
 let canvas = document.getElementById("canvas");
 let context = canvas.getContext('2d', { alpha: false });
 
+let background = document.getElementById("background");
+let backgroundcontext = background.getContext('2d', { alpha: false });
+
 //Requests
 var halfCanvas = 0;
 
@@ -41,9 +44,6 @@ function initCanvas()
 
 function initBackground() {
 
-	let background = document.getElementById("background");
-	let backgroundcontext = background.getContext('2d', { alpha: false });
-
 	background.height = background.width = canvas.height;
  	background.style.left = canvas.style.left;
   	background.style.bottom = canvas.style.bottom;
@@ -81,6 +81,9 @@ function click(event) {
   console.log(coordinate);
   findIntersect(coordinate);
 }
+
+
+
 
 
 

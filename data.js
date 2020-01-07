@@ -15,6 +15,10 @@ function set(input, mercator) {
 	object.yaw = 0;
 	object.roll = 0;
 
+	object.dx = 0;
+	object.dy = 0;
+	object.dz = 0;
+
 	object.su = 0;
 	object.cu = 0;
 	object.sv = 0;
@@ -31,6 +35,8 @@ function set(input, mercator) {
 	object.r31 = 0;
 	object.r32 = 0;
 	object.r33 = 0; 
+
+	object.animate = false;
 
 	deltaReverse();
 	normalise(mercator);

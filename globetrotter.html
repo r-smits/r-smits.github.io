@@ -53,7 +53,7 @@
 
 		.div-table {
 		  display: table;         
-		  width: auto;         
+		  width: 90%;         
 		  background-color: #eee;         
 		  border: 1px solid #666666;         
 		  border-spacing: 5px; /* cellspacing:poor IE support for  this */
@@ -69,7 +69,7 @@
 		.div-table-col {
 		  float: left; /* fix for  buggy browsers */
 		  display: table-column;         
-		  width: 400px;         
+		  width: 33%;         
 		  background-color: #ccc;  
 		}
 
@@ -192,9 +192,9 @@
 			visvalingam.execute(val);
 		}
 
-		function pitch() { dx = toRadians( document.getElementById("pitch").value ); }
-		function jaw() { dy = toRadians( document.getElementById("jaw").value ); }
-		function roll() { dz = toRadians( document.getElementById("roll").value ); }
+		function pitch() { adjustAxis(toRadians( document.getElementById("pitch").value ), object.dy, object.dz); }
+		function jaw() { adjustAxis(object.dx, toRadians( document.getElementById("jaw").value ), object.dz); }
+		function roll() { adjustAxis(object.dx, object.dy, toRadians( document.getElementById("roll").value )); }
 
 		function cullingSwitch() { (transparency == 1) ? transparency = undefined : transparency = 1; }
 

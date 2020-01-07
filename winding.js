@@ -2,33 +2,31 @@
 //First; intersection
 
 var geometries = [];
+var currentlySelected = "";
 
 function getCoordinate(event) {
-
   let x = event.clientX - canvas.getBoundingClientRect().left;
   let y = event.clientY - canvas.getBoundingClientRect().top;
   return [x, y];
 }
 
-
 function findIntersect(point) {
 
     geometries.forEach( function (polygon) {
-
-        var inter = 0;
-
+        inter = 0;
         polygon.arcs.forEach( function(arc) {
-
             arc.forEach( function(indices) {
                 (indices.length) ? indices.forEach( function(index) { (index >= 0) ? inter += positive(index, point) : inter += negative(index, point) }) : (indices >= 0) ? inter += positive(indices, point) : inter += negative(indices, point);
-            })})
+        })})
 
-        if (inter % 2 != 0) {
-            let country = polygon.properties.name;
-            displayInfo(country);
+        if (inter % 2 < 0) { 
+            object.selected = polygon;
+            (!object.animate) ? requestFrame() : object.animate = false;
+            (!object.animate) ? displayInfo(polygon) : wipe();
         }
-
     });
+
+    //if (inter % 2 >= 0) { (object.animate) ? object.animate = false : requestFrame(); }
 
     function positive(index, point) { 
         return windingNumber(object.translate[index], point);
@@ -58,6 +56,7 @@ function windingNumber(array, point) {
 
         if (ny <= py) {
             if (n2y > py) {
+
                 if (orientation( array[i], array[i+1], point ) > 0) ++result;
             }
 
@@ -69,7 +68,6 @@ function windingNumber(array, point) {
     function orientation(p, q, a) { 
         // This works based on the cross product (a * d - b * c). 
         // It is actually not based on a comparison of angles.
-
         // It checks where i-hat is in comparison to j-hat.
         // If i hat is negative, it is clockwise. Otherwise it is counter-clockwise.
         
@@ -80,7 +78,17 @@ function windingNumber(array, point) {
 }
 
 
-function displayInfo(country) {
+
+function switchRotation() {
+
+    (object.animate) ? object.animate = false : requestFrame();
+    console.log(object.animate);
+}
+
+function displayInfo(polygon) {
+
+    console.log("poly: ", polygon);
+    let country = polygon.properties.name;
 
     let cell1 = document.getElementById("c1r5");
     let cell2 = document.getElementById("c2r5");
@@ -89,9 +97,46 @@ function displayInfo(country) {
     cell1.innerText = country;
     cell2.innerText = country + " is a beautiful country. This text is a placeholder.";
     cell3.innerText = "See the following links to learn more about " + country + "'s culture and places to visit.";
-
-
 }
+
+function fillSelection(polygon) {
+
+    console.log("triggered");
+
+    backgroundcontext.beginPath();
+    backgroundcontext.strokeStyle = 'green';
+
+    backgroundcontext.lineWidth = 1;
+
+    polygon.arcs.forEach( function(arc) {
+        arc.forEach( function(indices) {
+            (indices.length) ? indices.forEach( function(index) { (index >= 0) ? positive(index) : negative(index); }) : (indices >= 0) ? positive(indices) : negative(indices);
+    })});
+        
+    function positive(index) { 
+        backgroundcontext.moveTo(object.translate[index][0][0], object.translate[index][0][1]);
+        object.translate[index].forEach( function(element) { backgroundcontext.lineTo(element[0], element[1]); } );
+    }
+
+    function negative(index) {
+        index = Math.abs(index)-1; let lastIndex = object.translate[index].length-1;
+        backgroundcontext.moveTo(object.translate[index][lastIndex][0], object.translate[index][lastIndex][1]);
+        //object.translate[index].forEach( function(element) { backgroundcontext.lineTo(element[0], element[1]); } );
+        for (var i = lastIndex; i >= 0; i --) { backgroundcontext.lineTo(object.translate[index][i][0], object.translate[index][i][1]); }
+    }
+
+    backgroundcontext.stroke();
+
+    //backgroundcontext.fill();
+    backgroundcontext.closePath();
+}
+
+function wipe() {
+    context.clearRect(0,0, canvas.width, canvas.height);
+    initBackground();
+}
+
+
 
 
 

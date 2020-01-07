@@ -1,34 +1,51 @@
-//object & context
-var transparency = 1;
-
-var dx = 0;
-var dy = 0;
-var dz = 0;
 
 //Object
+var transparency = 1;
 var object = [];
 
 function received(x, y, z) {
-  dx = toRadians(x); dy = toRadians(y); dz = toRadians(z);
-  object.rotate(toRadians(-90), 0, toRadians(23));
-  animate = true;
-  window.requestAnimationFrame(animation); 
+  preRotation(-90, 0, 23);
+  beginRotation(x, y, z);
 }
+
+function preRotation(x, y, z) {
+    initAxis(x, y, z);
+    object.rotate();
+}
+
+function beginRotation(x, y, z) {
+    initAxis(x, y, z);
+    requestFrame();
+}
+
+function initAxis(dx, dy, dz) {
+    object.dx = toRadians(dx);
+    object.dy = toRadians(dy);
+    object.dz = toRadians(dz);
+}
+
+function adjustAxis(dx, dy, dz) {
+    object.dx = dx;
+    object.dy = dy;
+    object.dz = dz;
+}
+
+function requestFrame() { object.animate = true; window.requestAnimationFrame(animation); }
 
 function toRadians(input) { return input / 180 * Math.PI; }
 
 function animation() {
-    object.rotate(dx, dy, dz); 
+    object.rotate(); 
     object.resize();
     object.erase();
     object.draw();
 }
 
-object.rotate = function(dx, dy, dz) {
+object.rotate = function() {
 
-    this.pitch = this.wrapAngle(this.pitch + dy);
-    this.yaw = this.wrapAngle(this.yaw + dz); 
-    this.roll = this.wrapAngle(this.roll + dx);
+    this.pitch = this.wrapAngle(this.pitch + this.dy);
+    this.yaw = this.wrapAngle(this.yaw + this.dz); 
+    this.roll = this.wrapAngle(this.roll + this.dx);
 
     this.su = Math.sin(this.roll);
     this.cu = Math.cos(this.roll);
@@ -36,23 +53,24 @@ object.rotate = function(dx, dy, dz) {
     this.cv = Math.cos(this.pitch);
     this.sw = Math.sin(this.yaw);
     this.cw = Math.cos(this.yaw);
+
+    let cuXsv = this.cu * this.sv;
+    let suXsv = this.su * this.sv;
           
     this.r11 = this.cv * this.cw;
-    this.r12 = this.su * this.sv * this.cw - this.cu * this.sw;
-    this.r13 = this.su * this.sw + this.cu * this.sv * this.cw;
+    this.r12 = suXsv * this.cw - this.cu * this.sw;
+    this.r13 = this.su * this.sw + cuXsv * this.cw;
 
     this.r21 = this.cv * this.sw;
-    this.r22 = this.cu * this.cw + this.su * this.sv * this.sw;
-    this.r23 = this.cu * this.sv * this.sw - this.su * this.cw;
+    this.r22 = this.cu * this.cw + suXsv * this.sw;
+    this.r23 = cuXsv * this.sw - this.su * this.cw;
 
-    this.r31 = - this.sv;
+    this.r31 = -this.sv;
     this.r32 = this.su * this.cv;
     this.r33 = this.cu * this.cv;
 
-    for (var i = this.translate.length; i < this.coordinates.length; i ++) { this.translate[i] = []; }
-
     for (var i = 0, n = this.coordinates.length; i < n; i ++) {
-        this.translate[i].length = 0, this.translate[i].index = i;
+        this.translate[i].length = 0;
         for (var ii = 0, m = this.coordinates[i].length; ii < m; ii ++) {
 
             let px = this.coordinates[i][ii][0];
@@ -63,7 +81,8 @@ object.rotate = function(dx, dy, dz) {
             let pyy = this.r21 * px + this.r22 * py + this.r23 * pz;
             let pzz = this.r31 * px + this.r32 * py + this.r33 * pz;
 
-            (transparency && pzz < 0) ? 0 : this.translate[i][this.translate[i].length] = [pxx, pyy, pzz];
+            if (transparency && pzz < 0) continue;
+            this.translate[i][this.translate[i].length] = [pxx, pyy, pzz];
 }}}
 
 object.resize = function() {
@@ -92,5 +111,5 @@ object.draw = function() {
     context.stroke();
     context.closePath();
 
-    window.requestAnimationFrame(animation);
+    (object.animate) ? window.requestAnimationFrame(animation) : fillSelection(object.selected);
 }
