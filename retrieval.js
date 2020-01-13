@@ -1,9 +1,9 @@
 //Canvas objects
 let canvas = document.getElementById("canvas");
-let context = canvas.getContext('2d', { alpha: false });
+let context = canvas.getContext('2d', { alpha: true });
 
 let background = document.getElementById("background");
-let backgroundcontext = background.getContext('2d', { alpha: false });
+let backgroundcontext = background.getContext('2d', { alpha: true });
 
 //Requests
 var halfCanvas = 0;
